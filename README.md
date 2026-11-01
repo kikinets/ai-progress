@@ -6,7 +6,7 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 
 ## Status
 
-**Phase 3: AI coach (done).** Tasks can be checked off; progress is saved to disk by the Rust core, and the app shows overall and weekly progress plus a daily study streak. A second tab shows the skill dependency graph, with each skill locked, available, in progress or done. A third tab is an AI coach powered by Claude: it reviews progress against the calendar and suggests the next tasks, and it quizzes you on any skill with multiple-choice questions.
+**Phase 3: AI coach (done).** Tasks can be checked off; progress is saved to disk by the Rust core, and the app shows overall and weekly progress plus a daily study streak. A second tab shows the skill dependency graph, with each skill locked, available, in progress or done. A third tab is an AI coach powered by Claude: it reviews progress against the calendar and suggests the next tasks, and it quizzes you on any skill with multiple-choice questions. By default it is free: the app builds the prompt from your progress, copies it and opens claude.ai, where your Claude subscription answers. Optionally, with an Anthropic API key, answers appear inside the app.
 
 | Phase | Scope |
 | --- | --- |

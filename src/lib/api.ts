@@ -17,6 +17,11 @@ export const setApiKey = (key: string) => invoke<void>("set_api_key", { key });
 
 export const deleteApiKey = () => invoke<void>("delete_api_key");
 
+/** Rust builds the coach prompt and puts it on the clipboard. */
+export const copyReviewPrompt = () => invoke<void>("copy_review_prompt");
+
+export const copyQuizPrompt = (skillId: string) => invoke<void>("copy_quiz_prompt", { skillId });
+
 export const coachReview = () => invoke<Review>("coach_review");
 
 export const coachQuiz = (skillId: string) => invoke<Quiz>("coach_quiz", { skillId });

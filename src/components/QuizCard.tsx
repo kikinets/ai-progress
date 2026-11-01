@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { coachQuiz } from "../lib/api";
+import { coachQuiz, copyQuizPrompt } from "../lib/api";
 import type { Quiz } from "../types/coach";
 import type { Skill } from "../types/roadmap";
+import { CopyToClaude } from "./CopyToClaude";
 import { Thinking } from "./Thinking";
 
-export function QuizCard({ skills }: { skills: Skill[] }) {
+export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: boolean }) {
   const [skillId, setSkillId] = useState(skills[0]?.id ?? "");
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   // Index of the chosen option per question; undefined until answered.
@@ -38,34 +39,36 @@ export function QuizCard({ skills }: { skills: Skill[] }) {
 
   return (
     <section className="mt-4 rounded-lg border border-line p-4">
-      <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 className="font-medium">Examen</h3>
-          <p className="text-sm text-muted">5 preguntas tipo test sobre una habilidad, a tu nivel.</p>
-        </div>
-        <div className="flex gap-2">
-          <select
-            value={skillId}
-            onChange={(e) => setSkillId(e.currentTarget.value)}
-            aria-label="Habilidad del examen"
-            className="rounded-md border border-line bg-surface px-2 py-1.5 text-sm"
-          >
-            {skills.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
+      <h3 className="font-medium">Examen</h3>
+      <p className="text-sm text-muted">
+        5 preguntas tipo test sobre una habilidad, a tu nivel. En Claude.ai te las hace de una en una y te corrige.
+      </p>
+
+      <div className="mt-3 flex flex-wrap items-start gap-2">
+        <select
+          value={skillId}
+          onChange={(e) => setSkillId(e.currentTarget.value)}
+          aria-label="Habilidad del examen"
+          className="rounded-md border border-line bg-surface px-2 py-1.5 text-sm"
+        >
+          {skills.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name}
+            </option>
+          ))}
+        </select>
+        <CopyToClaude copyPrompt={() => copyQuizPrompt(skillId)} />
+        {hasApiKey && (
           <button
             type="button"
             onClick={start}
             disabled={loading || !skillId}
-            className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-surface disabled:opacity-50"
+            className="rounded-md border border-line px-3 py-1.5 text-sm hover:border-accent disabled:opacity-50"
           >
-            {quiz ? "Otro examen" : "Examíname"}
+            {quiz ? "Otro examen (API)" : "Examinarme aquí (API)"}
           </button>
-        </div>
-      </header>
+        )}
+      </div>
 
       {loading && <Thinking label="El coach está preparando las preguntas…" />}
       {error && (

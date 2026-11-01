@@ -10,7 +10,8 @@ use coach::{Quiz, Review};
 use progress::{ProgressStore, ProgressView};
 use secrets::KeySource;
 use serde::Serialize;
-use tauri::{Manager, State};
+use tauri::{AppHandle, Manager, State};
+use tauri_plugin_clipboard_manager::ClipboardExt;
 
 /// Shared by all commands. The Mutex makes progress safe to change from concurrent calls.
 struct AppState {
@@ -81,12 +82,40 @@ fn delete_api_key() -> Result<(), String> {
     secrets::delete()
 }
 
-// Async commands run off the UI thread, so the window stays responsive while Claude answers.
+impl AppState {
+    fn review_context(&self) -> Result<(String, ProgressView), String> {
+        let view = self.progress_view()?;
+        let context = coach::progress_context(&self.roadmap, &view.completed, &view.streak, Local::now().date_naive());
+        Ok((context, view))
+    }
+
+    fn quiz_context(&self, skill_id: &str) -> Result<String, String> {
+        let view = self.progress_view()?;
+        coach::skill_context(&self.roadmap, &view.completed, skill_id).ok_or_else(|| format!("unknown skill id: {skill_id}"))
+    }
+}
+
+// Free mode: Rust writes the prompt to the clipboard and the user pastes it into claude.ai.
+// Copying from Rust avoids the webview's clipboard permission rules.
+fn copy(app: &AppHandle, text: String) -> Result<(), String> {
+    app.clipboard().write_text(text).map_err(|e| format!("no se pudo copiar: {e}"))
+}
+
+#[tauri::command]
+fn copy_review_prompt(app: AppHandle, state: State<AppState>) -> Result<(), String> {
+    copy(&app, coach::review_chat_prompt(&state.review_context()?.0))
+}
+
+#[tauri::command]
+fn copy_quiz_prompt(skill_id: String, app: AppHandle, state: State<AppState>) -> Result<(), String> {
+    copy(&app, coach::quiz_chat_prompt(&state.quiz_context(&skill_id)?))
+}
+
+// API mode. Async commands run off the UI thread, so the window stays responsive while Claude answers.
 #[tauri::command]
 async fn coach_review(state: State<'_, AppState>) -> Result<Review, String> {
     let key = require_api_key()?;
-    let view = state.progress_view()?;
-    let context = coach::progress_context(&state.roadmap, &view.completed, &view.streak, Local::now().date_naive());
+    let (context, view) = state.review_context()?;
     let review = coach::ask(&key, &coach::review_request(&context)).await?;
     Ok(coach::clean_review(review, &state.roadmap, &view.completed))
 }
@@ -94,9 +123,7 @@ async fn coach_review(state: State<'_, AppState>) -> Result<Review, String> {
 #[tauri::command]
 async fn coach_quiz(skill_id: String, state: State<'_, AppState>) -> Result<Quiz, String> {
     let key = require_api_key()?;
-    let view = state.progress_view()?;
-    let context = coach::skill_context(&state.roadmap, &view.completed, &skill_id)
-        .ok_or_else(|| format!("unknown skill id: {skill_id}"))?;
+    let context = state.quiz_context(&skill_id)?;
     coach::clean_quiz(coach::ask(&key, &coach::quiz_request(&context)).await?)
 }
 
@@ -104,6 +131,7 @@ async fn coach_quiz(skill_id: String, state: State<'_, AppState>) -> Result<Quiz
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
             let path = app.path().app_data_dir()?.join("progress.json");
             let roadmap = roadmap::parse()?;
@@ -121,6 +149,8 @@ pub fn run() {
             api_key_status,
             set_api_key,
             delete_api_key,
+            copy_review_prompt,
+            copy_quiz_prompt,
             coach_review,
             coach_quiz
         ])

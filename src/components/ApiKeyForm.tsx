@@ -25,9 +25,10 @@ export function ApiKeyForm({ onSaved }: { onSaved: () => void }) {
 
   return (
     <form onSubmit={save} className="rounded-lg border border-line p-4">
-      <h3 className="font-medium">Conecta el coach con Claude</h3>
+      <h3 className="font-medium">Respuestas dentro de la app</h3>
       <p className="mt-1 text-sm text-muted">
-        El coach usa la API de Claude. Crea una clave en la{" "}
+        Con una clave de la API de Claude, el coach responde aquí mismo y puedes marcar sus tareas y hacer el examen en la
+        app. La API se paga aparte de tu suscripción: unos céntimos por consulta. Crea una clave en la{" "}
         <button type="button" onClick={() => openUrl(KEYS_URL)} className="text-accent underline-offset-2 hover:underline">
           consola de Anthropic
         </button>{" "}

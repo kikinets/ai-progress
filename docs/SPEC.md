@@ -31,7 +31,8 @@ App de escritorio para seguir el aprendizaje de IA: roadmap interactivo, tareas 
   - Al pulsar un nodo se ven sus requisitos y sus tareas, que se pueden marcar desde ahí.
   - Un test de Rust garantiza que el roadmap solo referencia habilidades que existen y que el grafo no tiene ciclos.
 - **Fase 3, coach con IA (Claude):**
-  - Pestaña "Coach". Todas las llamadas a la API de Claude se hacen desde Rust (HTTP a `POST /v1/messages`, modelo `claude-opus-5-5`, salida estructurada con JSON Schema).
+  - Pestaña "Coach". **Modo gratis (por defecto):** Rust arma el prompt (instrucciones + progreso) y lo copia al portapapeles con `tauri-plugin-clipboard-manager`; la app abre claude.ai y el usuario lo pega. Responde su suscripción de Claude, sin coste extra. En el examen, Claude hace las preguntas de una en una en el chat.
+  - **Modo API (opcional, de pago):** escondido en un desplegable. Todas las llamadas a la API de Claude se hacen desde Rust (HTTP a `POST /v1/messages`, modelo `claude-opus-5-5`, salida estructurada con JSON Schema); las respuestas se ven dentro de la app.
   - Clave de API: se guarda en el Administrador de credenciales de Windows (crate `keyring`), nunca en archivos ni en git. Si existe la variable de entorno `ANTHROPIC_API_KEY`, tiene prioridad.
   - **Revisión:** el coach recibe el roadmap, las tareas hechas y pendientes, la racha y la fecha de hoy, y devuelve un resumen, un consejo y hasta 3 tareas siguientes (ids validados contra el roadmap).
   - **Examen:** para una habilidad elegida, genera 5 preguntas tipo test (4 opciones, una correcta, con explicación) adaptadas a las tareas de esa habilidad. Se corrigen en la interfaz; de momento no se guardan los resultados.

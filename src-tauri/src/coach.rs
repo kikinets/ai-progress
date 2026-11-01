@@ -35,6 +35,36 @@ su posición (0-3) y conviene variarla entre preguntas. explanation dice en 1-2 
 es la correcta. Pregunta por comprensión, no por memoria de detalles triviales. Escribe en \
 español; deja en inglés los términos técnicos que se usan así.";
 
+// Free mode: the same context goes to the clipboard and the user pastes it into claude.ai.
+const REVIEW_CHAT: &str = "Eres mi coach de estudio. Me preparo para un bootcamp de AI \
+Engineering. Abajo tienes mi roadmap, qué tareas he completado y cuándo, mi racha y la fecha de \
+hoy. Respóndeme en español, en tono cercano y directo, sin relleno:\n\
+1. Cómo voy respecto al calendario de las semanas (2-3 frases).\n\
+2. Un consejo concreto y accionable para los próximos días.\n\
+3. Hasta 3 tareas pendientes que haría a continuación, en orden.";
+
+const QUIZ_CHAT: &str = "Eres un profesor que me examina. Me preparo para un bootcamp de AI \
+Engineering. Hazme un examen de 5 preguntas tipo test sobre la habilidad de abajo, al nivel de \
+sus tareas: prioriza lo que cubren las que he completado ([x]) y, si no hay ninguna, usa un nivel \
+introductorio. Cada pregunta con 4 opciones (A-D) y una sola correcta. Pregunta por comprensión, \
+no por detalles triviales.\n\
+Hazme las preguntas de una en una: espera mi respuesta, dime si he acertado con una explicación \
+breve y pasa a la siguiente. Al final, dame mi nota y qué debería repasar. Escribe en español; deja \
+en inglés los términos técnicos que se usan así.";
+
+/// Ready-to-paste text for claude.ai: instructions first, then the data.
+pub fn chat_prompt(instructions: &str, context: &str) -> String {
+    format!("{instructions}\n\n---\n\n{context}")
+}
+
+pub fn review_chat_prompt(context: &str) -> String {
+    chat_prompt(REVIEW_CHAT, context)
+}
+
+pub fn quiz_chat_prompt(context: &str) -> String {
+    chat_prompt(QUIZ_CHAT, context)
+}
+
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Review {
@@ -354,6 +384,15 @@ mod tests {
     fn refusal_is_an_error() {
         let body = json!({ "stop_reason": "refusal", "content": [] }).to_string();
         assert!(parse_response::<Review>(200, &body).unwrap_err().contains("rechazado"));
+    }
+
+    #[test]
+    fn chat_prompts_put_instructions_before_data() {
+        let prompt = quiz_chat_prompt("Habilidad: Python");
+        let instructions = prompt.find("de una en una").unwrap();
+        let data = prompt.find("Habilidad: Python").unwrap();
+        assert!(instructions < data);
+        assert!(review_chat_prompt("ctx").ends_with("ctx"));
     }
 
     #[test]

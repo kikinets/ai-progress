@@ -1,23 +1,25 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { coachReview } from "../lib/api";
+import { coachReview, copyReviewPrompt } from "../lib/api";
 import type { Review } from "../types/coach";
 import type { Task } from "../types/roadmap";
+import { CopyToClaude } from "./CopyToClaude";
 import { TaskItem } from "./TaskItem";
 import { Thinking } from "./Thinking";
 
 interface Props {
+  hasApiKey: boolean;
   tasksById: Map<string, Task>;
   completed: Record<string, string>;
   onToggle: (task: Task) => void;
 }
 
-export function ReviewCard({ tasksById, completed, onToggle }: Props) {
+export function ReviewCard({ hasApiKey, tasksById, completed, onToggle }: Props) {
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function run() {
+  async function runWithApi() {
     setLoading(true);
     setError(null);
     try {
@@ -33,20 +35,24 @@ export function ReviewCard({ tasksById, completed, onToggle }: Props) {
 
   return (
     <section className="rounded-lg border border-line p-4">
-      <header className="flex items-center justify-between gap-4">
-        <div>
-          <h3 className="font-medium">Revisión de progreso</h3>
-          <p className="text-sm text-muted">El coach mira tu roadmap, tus tareas y tu racha.</p>
-        </div>
-        <button
-          type="button"
-          onClick={run}
-          disabled={loading}
-          className="shrink-0 rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-surface disabled:opacity-50"
-        >
-          {review ? "Revisar de nuevo" : "Revisar mi progreso"}
-        </button>
-      </header>
+      <h3 className="font-medium">Revisión de progreso</h3>
+      <p className="text-sm text-muted">
+        El coach mira tu roadmap, tus tareas y tu racha, y te dice cómo vas y qué hacer después.
+      </p>
+
+      <div className="mt-3 flex flex-wrap items-start gap-2">
+        <CopyToClaude copyPrompt={copyReviewPrompt} />
+        {hasApiKey && (
+          <button
+            type="button"
+            onClick={runWithApi}
+            disabled={loading}
+            className="rounded-md border border-line px-3 py-1.5 text-sm hover:border-accent disabled:opacity-50"
+          >
+            Preguntar aquí (API)
+          </button>
+        )}
+      </div>
 
       {loading && <Thinking label="El coach está revisando tu progreso…" />}
       {error && (
