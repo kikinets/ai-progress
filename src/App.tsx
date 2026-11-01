@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import { MotionConfig, motion } from "motion/react";
 import { loadProgress, loadRoadmap, setTaskDone } from "./lib/api";
-import { todayIso } from "./lib/dates";
 import { ProgressBar } from "./components/ProgressBar";
+import { RoadmapView } from "./components/RoadmapView";
+import { SkillsView } from "./components/SkillsView";
 import { StreakBadge } from "./components/StreakBadge";
-import { WeekCard } from "./components/WeekCard";
 import type { Progress } from "./types/progress";
 import type { Roadmap, Task } from "./types/roadmap";
+
+type View = "roadmap" | "skills";
+
+const TABS: { id: View; label: string }[] = [
+  { id: "roadmap", label: "Roadmap" },
+  { id: "skills", label: "Habilidades" },
+];
 
 function App() {
   const [roadmap, setRoadmap] = useState<Roadmap | null>(null);
   const [progress, setProgress] = useState<Progress | null>(null);
+  const [view, setView] = useState<View>("roadmap");
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -53,13 +61,12 @@ function App() {
   const allTasks = roadmap.phases.flatMap((p) => p.weeks.flatMap((w) => w.tasks));
   const doneCount = allTasks.filter((t) => progress.completed[t.id]).length;
   const percent = allTasks.length === 0 ? 0 : Math.round((doneCount / allTasks.length) * 100);
-  const today = todayIso();
 
   return (
     // reducedMotion="user" disables transform animations when the OS asks for reduced motion.
     <MotionConfig reducedMotion="user">
       <motion.main
-        className="mx-auto max-w-3xl p-8"
+        className="mx-auto max-w-4xl p-8"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
@@ -88,22 +95,44 @@ function App() {
           </p>
         )}
 
-        {roadmap.phases.map((phase) => (
-          <section key={phase.id} className="mt-8">
-            <h2 className="text-lg font-semibold text-accent">{phase.name}</h2>
-            {phase.note && <p className="text-sm text-muted">{phase.note}</p>}
+        <nav role="tablist" className="mt-6 mb-6 flex gap-1 border-b border-line">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={view === tab.id}
+              onClick={() => setView(tab.id)}
+              className={`relative px-3 py-2 text-sm transition-colors duration-150 ${
+                view === tab.id ? "font-medium text-ink" : "text-muted hover:text-ink"
+              }`}
+            >
+              {tab.label}
+              {view === tab.id && (
+                <motion.span
+                  layoutId="tab-indicator"
+                  className="absolute inset-x-0 -bottom-px h-0.5 bg-accent"
+                  transition={{ type: "spring", visualDuration: 0.25, bounce: 0.1 }}
+                />
+              )}
+            </button>
+          ))}
+        </nav>
 
-            {phase.weeks.map((week) => (
-              <WeekCard
-                key={week.id}
-                week={week}
-                isCurrent={week.start <= today && today <= week.end}
-                completed={progress.completed}
-                onToggle={toggleTask}
-              />
-            ))}
-          </section>
-        ))}
+        {/* Keyed by view so the new tab fades in; no exit animation, so content never waits. */}
+        <motion.div
+          key={view}
+          role="tabpanel"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.15 }}
+        >
+          {view === "roadmap" ? (
+            <RoadmapView roadmap={roadmap} completed={progress.completed} onToggle={toggleTask} />
+          ) : (
+            <SkillsView roadmap={roadmap} completed={progress.completed} onToggle={toggleTask} />
+          )}
+        </motion.div>
       </motion.main>
     </MotionConfig>
   );

@@ -6,13 +6,13 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 
 ## Status
 
-**Phase 1: progress (done).** Tasks can be checked off; progress is saved to disk by the Rust core, and the app shows overall and weekly progress plus a daily study streak.
+**Phase 2: skill map (done).** Tasks can be checked off; progress is saved to disk by the Rust core, and the app shows overall and weekly progress plus a daily study streak. A second tab shows the skill dependency graph, with each skill locked, available, in progress or done, and its tasks one click away.
 
 | Phase | Scope |
 | --- | --- |
 | 0 | Project setup, roadmap loading from Rust ✅ |
 | 1 | Check off tasks, persist progress, study streak ✅ |
-| 2 | Skill map (dependency graph) with React Flow |
+| 2 | Skill map (dependency graph) with React Flow ✅ |
 | 3 | AI coach that reviews progress and quizzes me |
 
 ## Stack
@@ -21,6 +21,8 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 - React + TypeScript + Vite
 - Tailwind CSS v4, light and dark themes
 - [Motion](https://motion.dev/) for animations, respecting `prefers-reduced-motion`
+- [React Flow](https://reactflow.dev/) for the skill map
+- Vitest (UI logic) and `cargo test` (Rust core)
 
 ## Architecture
 
@@ -50,4 +52,5 @@ Other commands:
 | --- | --- |
 | `npm run build` | Type-check and build the UI only |
 | `npm run tauri build` | Build the desktop installer |
+| `npm test` | Run the UI logic tests |
 | `cargo test --manifest-path src-tauri/Cargo.toml` | Run the Rust core tests |

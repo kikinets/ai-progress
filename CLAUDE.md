@@ -46,5 +46,6 @@ Es también mi primer proyecto serio con Claude Code. Además de construir la ap
 - Comprobar tipos y compilar solo la interfaz: `npm run build`
 - Compilar el instalador: `npm run tauri build`
 - Comprobar el núcleo en Rust: `cargo check --manifest-path src-tauri/Cargo.toml`
+- Tests de la lógica de la interfaz (Vitest): `npm test`
 - Tests del núcleo en Rust: `cargo test --manifest-path src-tauri/Cargo.toml`
 - Lint: aún no hay.

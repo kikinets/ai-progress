@@ -19,6 +19,17 @@
   }
 }
 
+/* Make React Flow use the app's theme tokens instead of its own palette. */
+.react-flow {
+  --xy-background-color: var(--color-surface);
+  --xy-background-pattern-color: var(--color-line);
+  --xy-controls-button-background-color: var(--color-surface);
+  --xy-controls-button-background-color-hover: var(--color-line);
+  --xy-controls-button-color: var(--color-ink);
+  --xy-controls-button-border-color: var(--color-line);
+  --xy-attribution-background-color: transparent;
+}
+
 body {
   background: var(--color-surface);
   color: var(--color-ink);
