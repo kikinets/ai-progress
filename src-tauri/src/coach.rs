@@ -1,13 +1,14 @@
 // AI coach: builds prompts from the roadmap and progress, calls the Claude Messages API
 // over HTTP (there is no official Rust SDK) and parses structured JSON answers.
 
-use std::{collections::BTreeMap, time::Duration};
+use std::time::Duration;
 
-use chrono::{DateTime, Local, NaiveDate, Utc};
+use chrono::{Local, NaiveDate};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use serde_json::{json, Value};
 
-use crate::progress::Streak;
+use crate::progress::{Progress, ProgressView};
+use crate::roadmap::Roadmap;
 
 const API_URL: &str = "https://api.anthropic.com/v1/messages";
 const API_VERSION: &str = "2026-10-21";
@@ -124,42 +125,42 @@ fn quiz_schema() -> Value {
     })
 }
 
-fn tasks_by_week(roadmap: &Value) -> Vec<(&Value, Vec<&Value>)> {
-    fn arr<'a>(v: &'a Value, k: &str) -> Vec<&'a Value> {
-        v[k].as_array().map(|a| a.iter().collect()).unwrap_or_default()
-    }
-    arr(roadmap, "phases")
-        .into_iter()
-        .flat_map(|phase| arr(phase, "weeks"))
-        .map(|week| (week, arr(week, "tasks")))
-        .collect()
+fn is_done(p: &Progress, id: &str) -> bool {
+    p.tasks.get(id).is_some_and(|t| t.completed_at.is_some())
 }
 
 /// Plain-text view of the roadmap and progress that the coach reads.
-pub fn progress_context(
-    roadmap: &Value,
-    completed: &BTreeMap<String, DateTime<Utc>>,
-    streak: &Streak,
-    today: NaiveDate,
-) -> String {
+/// Notes are only flagged, never copied: they are the user's private text.
+pub fn progress_context(r: &Roadmap, p: &Progress, view: &ProgressView, today: NaiveDate) -> String {
     let mut out = format!(
-        "Fecha de hoy: {today}\nObjetivo: {}\nRacha actual: {} días (récord: {})\n",
-        roadmap["goal"].as_str().unwrap_or(""),
-        streak.current,
-        streak.longest,
+        "Fecha de hoy: {today}\nObjetivo: {}\nRacha actual: {} días (récord: {})\nMinutos estudiados en total: {}\n",
+        r.goal, view.streak.current, view.streak.longest, view.stats.total_minutes,
     );
-    for (week, tasks) in tasks_by_week(roadmap) {
+    for week in r.phases.iter().flat_map(|ph| &ph.weeks) {
+        let minutes: u32 = view
+            .stats
+            .minutes_by_day
+            .iter()
+            .filter(|d| d.date >= week.start && d.date <= week.end)
+            .map(|d| d.minutes)
+            .sum();
         out += &format!(
-            "\n## Semana {}: {} ({} a {})\n",
-            week["number"], week["title"].as_str().unwrap_or(""),
-            week["start"].as_str().unwrap_or("?"), week["end"].as_str().unwrap_or("?"),
+            "\n## Semana {}: {} ({} a {}), minutos estudiados: {minutes}\n",
+            week.number, week.title, week.start, week.end
         );
-        for task in tasks {
-            let id = task["id"].as_str().unwrap_or("");
-            let title = task["title"].as_str().unwrap_or("");
-            match completed.get(id) {
-                Some(at) => out += &format!("- [x] {id}: {title} (completada el {})\n", at.with_timezone(&Local).date_naive()),
-                None => out += &format!("- [ ] {id}: {title}\n"),
+        for day in &week.days {
+            for task in &day.tasks {
+                let entry = p.tasks.get(&task.id);
+                let mut line = match entry.and_then(|t| t.completed_at) {
+                    Some(at) => format!("- [x] {}: {} (completada el {})", task.id, task.title, at.with_timezone(&Local).date_naive()),
+                    None if day.date < today => format!("- [ ] {}: {} (atrasada)", task.id, task.title),
+                    None => format!("- [ ] {}: {}", task.id, task.title),
+                };
+                if entry.is_some_and(|t| !t.notes.trim().is_empty()) {
+                    line += " (tiene notas)";
+                }
+                out += &line;
+                out.push('\n');
             }
         }
     }
@@ -167,28 +168,19 @@ pub fn progress_context(
 }
 
 /// The skill's name plus its tasks, or None if the skill does not exist.
-pub fn skill_context(roadmap: &Value, completed: &BTreeMap<String, DateTime<Utc>>, skill_id: &str) -> Option<String> {
-    let skill = roadmap["skills"].as_array()?.iter().find(|s| s["id"] == skill_id)?;
-    let mut out = format!("Habilidad: {}\nTareas de esta habilidad:\n", skill["name"].as_str().unwrap_or(skill_id));
-    for (_, tasks) in tasks_by_week(roadmap) {
-        for task in tasks.into_iter().filter(|t| t["skills"].as_array().is_some_and(|s| s.iter().any(|x| x == skill_id))) {
-            let id = task["id"].as_str().unwrap_or("");
-            let mark = if completed.contains_key(id) { "x" } else { " " };
-            out += &format!("- [{mark}] {}\n", task["title"].as_str().unwrap_or(""));
-        }
+pub fn skill_context(r: &Roadmap, p: &Progress, skill_id: &str) -> Option<String> {
+    let skill = r.skills.iter().find(|s| s.id == skill_id)?;
+    let mut out = format!("Habilidad: {}\n{}\nTareas de esta habilidad:\n", skill.name, skill.description);
+    for (_, _, task) in r.tasks().filter(|(_, _, t)| t.skills.iter().any(|s| s == skill_id)) {
+        let mark = if is_done(p, &task.id) { "x" } else { " " };
+        out += &format!("- [{mark}] {}\n", task.title);
     }
     Some(out)
 }
 
 /// Keeps only suggested tasks that exist and are still pending, in the coach's order.
-pub fn clean_review(mut review: Review, roadmap: &Value, completed: &BTreeMap<String, DateTime<Utc>>) -> Review {
-    let pending: Vec<&str> = tasks_by_week(roadmap)
-        .into_iter()
-        .flat_map(|(_, tasks)| tasks)
-        .filter_map(|t| t["id"].as_str())
-        .filter(|id| !completed.contains_key(*id))
-        .collect();
-    review.next_task_ids.retain(|id| pending.contains(&id.as_str()));
+pub fn clean_review(mut review: Review, r: &Roadmap, p: &Progress) -> Review {
+    review.next_task_ids.retain(|id| r.task(id).is_some() && !is_done(p, id));
     review.next_task_ids.dedup();
     review.next_task_ids.truncate(3);
     review
@@ -288,24 +280,29 @@ pub async fn ask<T: DeserializeOwned>(api_key: &str, body: &Value) -> Result<T, 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use chrono::{DateTime, Utc};
 
-    fn roadmap() -> Value {
-        json!({
-            "goal": "Llegar al bootcamp",
-            "skills": [{ "id": "python", "name": "Python", "requires": [] }],
-            "phases": [{ "weeks": [{
-                "number": 1, "title": "Python", "start": "2026-11-02", "end": "2026-11-08",
-                "tasks": [
-                    { "id": "t1", "title": "Instalar Python", "skills": ["python"] },
-                    { "id": "t2", "title": "Funciones", "skills": ["python"] },
-                    { "id": "t3", "title": "Git", "skills": [] }
-                ]
-            }]}]
-        })
+    fn roadmap() -> Roadmap {
+        crate::roadmap::load().unwrap()
     }
 
-    fn done(ids: &[&str]) -> BTreeMap<String, DateTime<Utc>> {
-        ids.iter().map(|id| (id.to_string(), Utc::now())).collect()
+    fn at(s: &str) -> DateTime<Utc> {
+        s.parse().unwrap()
+    }
+
+    fn progress(done: &[&str]) -> Progress {
+        let mut p = Progress::default();
+        for id in done {
+            crate::progress::set_task(&mut p, id, true, at("2026-11-02T10:00:00Z"));
+        }
+        p
+    }
+
+    fn context(p: &Progress, today: &str) -> String {
+        let r = roadmap();
+        let now = format!("{today}T20:00:00+01:00").parse::<DateTime<chrono::FixedOffset>>().unwrap();
+        let view = crate::progress::build_view(&r, p, now);
+        progress_context(&r, p, &view, now.date_naive())
     }
 
     fn api_text(text: &str) -> String {
@@ -318,22 +315,46 @@ mod tests {
 
     #[test]
     fn context_marks_done_and_pending_tasks() {
-        let streak = Streak { current: 2, longest: 4, studied_today: true };
-        let today = NaiveDate::from_ymd_opt(2026, 11, 3).unwrap();
-        let text = progress_context(&roadmap(), &done(&["t1"]), &streak, today);
-        assert!(text.contains("Fecha de hoy: 2026-11-03"));
-        assert!(text.contains("Racha actual: 2 días (récord: 4)"));
-        assert!(text.contains("- [x] t1: Instalar Python"));
-        assert!(text.contains("- [ ] t2: Funciones"));
+        let text = context(&progress(&["w1-setup"]), "2026-11-03");
+        assert!(text.contains("Fecha de hoy: 2026-11-03"), "{text}");
+        assert!(text.contains("Racha actual: 1 días (récord: 1)"), "{text}");
+        assert!(text.contains("- [x] w1-setup: Instalar Python"), "{text}");
+        assert!(text.contains("- [ ] w1-basics: Tipos"), "{text}");
+    }
+
+    #[test]
+    fn context_includes_week_minutes_and_overdue() {
+        let mut p = progress(&[]);
+        p.sessions.push(crate::progress::store::Session {
+            task_id: "w1-setup".into(),
+            start: at("2026-11-02T09:00:00Z"),
+            end: at("2026-11-02T09:50:00Z"),
+            minutes: 50,
+            mode: crate::progress::TimerMode::Free,
+        });
+        let text = context(&p, "2026-11-03");
+        assert!(text.contains("minutos estudiados: 50"), "{text}");
+        assert!(text.contains("- [ ] w1-setup: Instalar Python 3.12+, VS Code, Git y crear cuenta de GitHub (atrasada)"), "{text}");
+        assert!(!text.contains("w1-basics: Tipos, listas, diccionarios, sets, comprehensions, f-strings (atrasada)"), "{text}");
+    }
+
+    #[test]
+    fn context_flags_notes_without_content() {
+        let mut p = progress(&[]);
+        crate::progress::set_notes(&mut p, "w1-venv", "secreto".into()).unwrap();
+        let text = context(&p, "2026-11-01");
+        assert!(text.contains("(tiene notas)"), "{text}");
+        assert!(!text.contains("secreto"), "{text}");
     }
 
     #[test]
     fn skill_context_lists_only_that_skill() {
-        let text = skill_context(&roadmap(), &done(&["t2"]), "python").unwrap();
-        assert!(text.contains("Habilidad: Python"));
-        assert!(text.contains("- [x] Funciones"));
-        assert!(!text.contains("Git"));
-        assert!(skill_context(&roadmap(), &done(&[]), "nope").is_none());
+        let r = roadmap();
+        let text = skill_context(&r, &progress(&["w2-sql"]), "sql").unwrap();
+        assert!(text.contains("Habilidad: SQL"), "{text}");
+        assert!(text.contains("- [x] SQL básico"), "{text}");
+        assert!(!text.contains("NumPy"), "{text}");
+        assert!(skill_context(&r, &progress(&[]), "nope").is_none());
     }
 
     #[test]
@@ -341,10 +362,10 @@ mod tests {
         let review = Review {
             summary: "s".into(),
             advice: "a".into(),
-            next_task_ids: vec!["t1".into(), "made-up".into(), "t3".into(), "t2".into()],
+            next_task_ids: vec!["w1-setup".into(), "made-up".into(), "w1-git".into(), "w1-venv".into(), "w1-basics".into()],
         };
-        let cleaned = clean_review(review, &roadmap(), &done(&["t1"]));
-        assert_eq!(cleaned.next_task_ids, ["t3", "t2"]);
+        let cleaned = clean_review(review, &roadmap(), &progress(&["w1-setup"]));
+        assert_eq!(cleaned.next_task_ids, ["w1-git", "w1-venv", "w1-basics"]);
     }
 
     #[test]

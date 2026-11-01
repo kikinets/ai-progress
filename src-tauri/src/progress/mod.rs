@@ -61,14 +61,6 @@ pub fn build_view<Tz: TimeZone>(r: &Roadmap, p: &Progress, now: DateTime<Tz>) ->
     }
 }
 
-/// Task id -> completion time, the shape the coach prompts use.
-pub fn completed_map(p: &Progress) -> BTreeMap<String, DateTime<Utc>> {
-    p.tasks
-        .iter()
-        .filter_map(|(id, t)| t.completed_at.map(|at| (id.clone(), at)))
-        .collect()
-}
-
 /// After a change: stores newly reached badges and reports them, plus the new level if it went up.
 pub fn rewards<Tz: TimeZone>(r: &Roadmap, before: &Progress, after: &mut Progress, now: DateTime<Tz>) -> (Vec<String>, Option<u32>) {
     let tz = now.timezone();

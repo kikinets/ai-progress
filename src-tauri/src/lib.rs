@@ -17,8 +17,6 @@ use tauri_plugin_clipboard_manager::ClipboardExt;
 /// Shared by all commands. The Mutex makes progress safe to change from concurrent calls.
 struct AppState {
     roadmap: Roadmap,
-    /// Untyped copy for the coach prompts until they move to the typed roadmap.
-    roadmap_json: serde_json::Value,
     progress: Mutex<ProgressStore>,
     /// Shown once, on the first load after startup.
     notice: Mutex<Option<String>>,
@@ -135,20 +133,20 @@ fn delete_api_key() -> Result<(), String> {
 }
 
 impl AppState {
-    fn review_context(&self) -> Result<(String, ProgressView), String> {
-        let view = self.progress_view()?;
-        let completed = self.completed()?;
-        let context = coach::progress_context(&self.roadmap_json, &completed, &view.streak, Local::now().date_naive());
-        Ok((context, view))
-    }
-
-    fn completed(&self) -> Result<std::collections::BTreeMap<String, DateTime<Utc>>, String> {
+    fn review_context(&self) -> Result<String, String> {
         let store = self.progress.lock().map_err(|_| "progress is locked")?;
-        Ok(progress::completed_map(store.data()))
+        let now = Local::now();
+        let view = progress::build_view(&self.roadmap, store.data(), now);
+        Ok(coach::progress_context(&self.roadmap, store.data(), &view, now.date_naive()))
     }
 
     fn quiz_context(&self, skill_id: &str) -> Result<String, String> {
-        coach::skill_context(&self.roadmap_json, &self.completed()?, skill_id).ok_or_else(|| format!("unknown skill id: {skill_id}"))
+        let store = self.progress.lock().map_err(|_| "progress is locked")?;
+        coach::skill_context(&self.roadmap, store.data(), skill_id).ok_or_else(|| format!("unknown skill id: {skill_id}"))
+    }
+
+    fn progress_snapshot(&self) -> Result<Progress, String> {
+        Ok(self.progress.lock().map_err(|_| "progress is locked")?.data().clone())
     }
 }
 
@@ -160,7 +158,7 @@ fn copy(app: &AppHandle, text: String) -> Result<(), String> {
 
 #[tauri::command]
 fn copy_review_prompt(app: AppHandle, state: State<AppState>) -> Result<(), String> {
-    copy(&app, coach::review_chat_prompt(&state.review_context()?.0))
+    copy(&app, coach::review_chat_prompt(&state.review_context()?))
 }
 
 #[tauri::command]
@@ -172,9 +170,9 @@ fn copy_quiz_prompt(skill_id: String, app: AppHandle, state: State<AppState>) ->
 #[tauri::command]
 async fn coach_review(state: State<'_, AppState>) -> Result<Review, String> {
     let key = require_api_key()?;
-    let (context, _) = state.review_context()?;
+    let context = state.review_context()?;
     let review = coach::ask(&key, &coach::review_request(&context)).await?;
-    Ok(coach::clean_review(review, &state.roadmap_json, &state.completed()?))
+    Ok(coach::clean_review(review, &state.roadmap, &state.progress_snapshot()?))
 }
 
 #[tauri::command]
@@ -197,7 +195,6 @@ pub fn run() {
             let notice = closed.map(|_| "Se cerró una sesión que llevaba abierta más de 4 horas.".to_string());
             app.manage(AppState {
                 roadmap: roadmap::load()?,
-                roadmap_json: roadmap::parse_value()?,
                 progress: Mutex::new(store),
                 notice: Mutex::new(notice),
             });

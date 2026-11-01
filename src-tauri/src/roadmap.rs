@@ -2,7 +2,6 @@ use std::collections::{HashMap, HashSet};
 
 use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 
 // Seed data is read-only, so it is embedded in the binary at compile time.
 // Cargo rebuilds automatically when data/roadmap.json changes.
@@ -229,11 +228,6 @@ fn find_cycle(graph: &HashMap<&str, Vec<&str>>) -> Option<String> {
     let mut ids: Vec<_> = graph.keys().copied().collect();
     ids.sort();
     ids.into_iter().find_map(|id| visit(id, graph, &mut Vec::new(), &mut done))
-}
-
-/// v1 view of the embedded JSON; removed once every caller uses the typed roadmap.
-pub fn parse_value() -> serde_json::Result<Value> {
-    serde_json::from_str(ROADMAP_JSON)
 }
 
 #[cfg(test)]
