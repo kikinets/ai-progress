@@ -97,10 +97,21 @@ fn stop_session(state: State<AppState>) -> Result<ProgressUpdate, String> {
 fn set_task_done(task_id: String, done: bool, state: State<AppState>) -> Result<ProgressUpdate, String> {
     state.require_task(&task_id)?;
     state.mutate(|p, now| {
-        let task = p.tasks.entry(task_id).or_default();
-        task.completed_at = if done { task.completed_at.or(Some(now)) } else { None };
+        progress::set_task(p, &task_id, done, now);
         Ok(())
     })
+}
+
+#[tauri::command]
+fn set_subtask_done(task_id: String, subtask_id: String, done: bool, state: State<AppState>) -> Result<ProgressUpdate, String> {
+    let task = state.require_task(&task_id)?;
+    state.mutate(|p, now| progress::set_subtask(p, task, &subtask_id, done, now))
+}
+
+#[tauri::command]
+fn save_notes(task_id: String, notes: String, state: State<AppState>) -> Result<ProgressUpdate, String> {
+    state.require_task(&task_id)?;
+    state.mutate(|p, _| progress::set_notes(p, &task_id, notes))
 }
 
 /// Says whether a key is configured and where it comes from; never returns the key itself.
@@ -196,6 +207,8 @@ pub fn run() {
             load_roadmap,
             load_progress,
             set_task_done,
+            set_subtask_done,
+            save_notes,
             start_session,
             pause_session,
             resume_session,
