@@ -138,7 +138,7 @@ pub fn run() {
             let path = app.path().app_data_dir()?.join("progress.json");
             let roadmap = roadmap::parse_value()?;
             app.manage(AppState {
-                task_ids: roadmap::task_ids(&roadmap),
+                task_ids: roadmap::load()?.task_ids(),
                 roadmap,
                 progress: Mutex::new(ProgressStore::open(path)),
             });

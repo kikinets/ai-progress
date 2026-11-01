@@ -1,20 +1,99 @@
 {
-  "version": 1,
+  "version": 2,
   "title": "Roadmap AI Engineering",
   "goal": "Llegar al bootcamp de AI Engineering de Ironhack con una base sólida",
+  "dailyTargetMinutes": 150,
   "skills": [
-    { "id": "python", "name": "Python", "requires": [] },
-    { "id": "tooling", "name": "Entorno y Git", "requires": [] },
-    { "id": "numpy-pandas", "name": "NumPy y Pandas", "requires": ["python"] },
-    { "id": "sql", "name": "SQL", "requires": [] },
-    { "id": "math", "name": "Matemáticas para IA", "requires": [] },
-    { "id": "ml", "name": "Machine learning clásico", "requires": ["numpy-pandas", "math"] },
-    { "id": "neural-nets", "name": "Redes neuronales", "requires": ["ml"] },
-    { "id": "llms", "name": "LLMs", "requires": ["neural-nets"] },
-    { "id": "prompting", "name": "Prompt engineering", "requires": ["llms"] },
-    { "id": "llm-apis", "name": "APIs de LLMs", "requires": ["python", "prompting"] },
-    { "id": "rag", "name": "RAG", "requires": ["llm-apis"] },
-    { "id": "agents", "name": "Agentes", "requires": ["llm-apis"] }
+    {
+      "id": "python",
+      "name": "Python",
+      "description": "Escribir programas claros en Python: tipos, funciones, errores, módulos y POO.",
+      "requires": []
+    },
+    {
+      "id": "tooling",
+      "name": "Entorno y Git",
+      "description": "Trabajar como un profesional: entornos virtuales, dependencias, Git, GitHub y el editor.",
+      "requires": []
+    },
+    {
+      "id": "numpy-pandas",
+      "name": "NumPy y Pandas",
+      "description": "Cargar, limpiar, transformar y visualizar datos tabulares.",
+      "requires": [
+        "python"
+      ]
+    },
+    {
+      "id": "sql",
+      "name": "SQL",
+      "description": "Consultar bases de datos relacionales: filtrar, agregar y unir tablas.",
+      "requires": []
+    },
+    {
+      "id": "math",
+      "name": "Matemáticas para IA",
+      "description": "La intuición de vectores, matrices, gradientes y probabilidad que usa el ML.",
+      "requires": []
+    },
+    {
+      "id": "ml",
+      "name": "Machine learning clásico",
+      "description": "Entrenar, validar, evaluar y explicar modelos con scikit-learn.",
+      "requires": [
+        "numpy-pandas",
+        "math"
+      ]
+    },
+    {
+      "id": "neural-nets",
+      "name": "Redes neuronales",
+      "description": "Qué es una neurona, cómo aprende una red y qué hace el backpropagation.",
+      "requires": [
+        "ml"
+      ]
+    },
+    {
+      "id": "llms",
+      "name": "LLMs",
+      "description": "Cómo funciona un modelo de lenguaje: tokens, embeddings, atención y sus límites.",
+      "requires": [
+        "neural-nets"
+      ]
+    },
+    {
+      "id": "prompting",
+      "name": "Prompt engineering",
+      "description": "Dar instrucciones eficaces a un LLM: contexto, ejemplos, formato y evaluación.",
+      "requires": [
+        "llms"
+      ]
+    },
+    {
+      "id": "llm-apis",
+      "name": "APIs de LLMs",
+      "description": "Llamar a un LLM desde código: system prompt, streaming y salida estructurada.",
+      "requires": [
+        "python",
+        "prompting"
+      ]
+    },
+    {
+      "id": "rag",
+      "name": "RAG",
+      "description": "Responder con tus propios documentos: trocear, buscar por similitud y citar.",
+      "requires": [
+        "llm-apis"
+      ]
+    },
+    {
+      "id": "agents",
+      "name": "Agentes",
+      "description": "LLMs que usan herramientas en bucle para completar tareas de varios pasos.",
+      "requires": [
+        "llm-apis"
+      ]
+    }
   ],
   "phases": [
     {
@@ -22,70 +101,2246 @@
       "name": "Preparación pre-bootcamp",
       "start": "2026-11-02",
       "end": "2026-11-29",
+      "note": null,
       "weeks": [
         {
           "id": "w1",
           "number": 1,
           "title": "Python de verdad y entorno de trabajo",
+          "goal": "Programar en Python con soltura, con un entorno profesional y tu código en GitHub.",
           "start": "2026-11-02",
           "end": "2026-11-08",
-          "tasks": [
-            { "id": "w1-setup", "title": "Instalar Python 3.12+, VS Code, Git y crear cuenta de GitHub", "type": "practice", "skills": ["tooling"] },
-            { "id": "w1-venv", "title": "Entornos virtuales (venv o uv) y gestión de dependencias", "type": "practice", "skills": ["tooling"] },
-            { "id": "w1-basics", "title": "Tipos, listas, diccionarios, sets, comprehensions, f-strings", "type": "concept", "skills": ["python"] },
-            { "id": "w1-functions", "title": "Funciones, args/kwargs, excepciones, módulos e imports", "type": "concept", "skills": ["python"] },
-            { "id": "w1-oop", "title": "Clases y POO en Python (comparado con C++)", "type": "concept", "skills": ["python"] },
-            { "id": "w1-style", "title": "Type hints y estilo PEP 8", "type": "concept", "skills": ["python"] },
-            { "id": "w1-jupyter", "title": "Jupyter notebooks: cuándo usarlos y cuándo no", "type": "practice", "skills": ["tooling"] },
-            { "id": "w1-prework", "title": "Empezar el prework oficial de Ironhack", "type": "practice", "skills": [] },
-            { "id": "w1-deliverable", "title": "Entregable: herramienta CLI (gestor de gastos con CSV) en un repo con README", "type": "deliverable", "skills": ["python", "tooling"] }
+          "days": [
+            {
+              "date": "2026-11-02",
+              "title": "Entorno de trabajo",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w1-setup",
+                  "title": "Instalar Python 3.12+, VS Code, Git y crear cuenta de GitHub",
+                  "type": "practice",
+                  "skills": [
+                    "tooling"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Instala Python 3.12 o superior, VS Code con la extensión de Python, Git, y crea tu cuenta de GitHub con una clave SSH.",
+                  "why": "Todo el bootcamp asume que tu máquina está lista; resolverlo ahora evita perder clases peleándote con instalaciones.",
+                  "resources": [
+                    {
+                      "title": "VS Code: tutorial de Python",
+                      "url": "https://code.visualstudio.com/docs/python/python-tutorial",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Pro Git (libro gratuito)",
+                      "url": "https://git-scm.com/book/en/v2",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-setup-1",
+                      "title": "Instalar Python y comprobar `python --version`"
+                    },
+                    {
+                      "id": "w1-setup-2",
+                      "title": "Instalar VS Code y la extensión de Python"
+                    },
+                    {
+                      "id": "w1-setup-3",
+                      "title": "Instalar Git y configurar nombre y email"
+                    },
+                    {
+                      "id": "w1-setup-4",
+                      "title": "Crear cuenta de GitHub y añadir una clave SSH"
+                    }
+                  ],
+                  "doneWhen": "`python --version`, `git --version` funcionan y puedes hacer `git push` a un repo tuyo."
+                },
+                {
+                  "id": "w1-venv",
+                  "title": "Entornos virtuales (venv o uv) y gestión de dependencias",
+                  "type": "practice",
+                  "skills": [
+                    "tooling"
+                  ],
+                  "estimateMinutes": 45,
+                  "description": "Aprende a crear un entorno virtual por proyecto, instalar paquetes y fijarlos en un archivo de dependencias.",
+                  "why": "Cada proyecto de IA usa versiones distintas de librerías; sin entornos aislados todo acaba roto.",
+                  "resources": [
+                    {
+                      "title": "Python docs: venv",
+                      "url": "https://docs.python.org/3/library/venv.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "uv: primeros pasos",
+                      "url": "https://docs.astral.sh/uv/getting-started/",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-venv-1",
+                      "title": "Crear un entorno con `python -m venv .venv` y activarlo"
+                    },
+                    {
+                      "id": "w1-venv-2",
+                      "title": "Instalar `requests` y congelar dependencias"
+                    },
+                    {
+                      "id": "w1-venv-3",
+                      "title": "Repetirlo con `uv init` y `uv add`"
+                    },
+                    {
+                      "id": "w1-venv-4",
+                      "title": "Añadir `.venv` al `.gitignore`"
+                    }
+                  ],
+                  "doneWhen": "Tienes un proyecto que otra persona puede recrear con un solo comando."
+                },
+                {
+                  "id": "w1-git",
+                  "title": "Git y GitHub en el día a día",
+                  "type": "practice",
+                  "skills": [
+                    "tooling"
+                  ],
+                  "estimateMinutes": 45,
+                  "description": "Practica el ciclo básico: init, add, commit, branch, merge y push, y entiende qué es un pull request.",
+                  "why": "En el bootcamp entregarás todo por GitHub y trabajarás en equipo con ramas.",
+                  "resources": [
+                    {
+                      "title": "Pro Git (libro gratuito)",
+                      "url": "https://git-scm.com/book/en/v2",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "GitHub Skills: cursos interactivos",
+                      "url": "https://skills.github.com/",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-git-1",
+                      "title": "Crear un repo y hacer 3 commits con mensajes claros"
+                    },
+                    {
+                      "id": "w1-git-2",
+                      "title": "Crear una rama, cambiar algo y fusionarla"
+                    },
+                    {
+                      "id": "w1-git-3",
+                      "title": "Subirlo a GitHub y abrir un pull request"
+                    }
+                  ],
+                  "doneWhen": "Tienes un repo en GitHub con varias ramas fusionadas y un pull request."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-03",
+              "title": "Tipos y colecciones",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w1-basics",
+                  "title": "Tipos, listas, diccionarios, sets, comprehensions, f-strings",
+                  "type": "concept",
+                  "skills": [
+                    "python"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Repasa los tipos básicos y las colecciones de Python y practica comprehensions y f-strings con ejercicios cortos.",
+                  "why": "Los datos en IA llegan como listas y diccionarios; manejarlos con fluidez es la base de todo lo demás.",
+                  "resources": [
+                    {
+                      "title": "Python docs: estructuras de datos",
+                      "url": "https://docs.python.org/3/tutorial/datastructures.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Real Python: list comprehensions",
+                      "url": "https://realpython.com/list-comprehension-python/",
+                      "kind": "article"
+                    },
+                    {
+                      "title": "Real Python: f-strings",
+                      "url": "https://realpython.com/python-f-strings/",
+                      "kind": "article"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-basics-1",
+                      "title": "Leer la sección de estructuras de datos del tutorial"
+                    },
+                    {
+                      "id": "w1-basics-2",
+                      "title": "Hacer 5 ejercicios con listas y diccionarios"
+                    },
+                    {
+                      "id": "w1-basics-3",
+                      "title": "Reescribir 3 bucles como comprehensions"
+                    },
+                    {
+                      "id": "w1-basics-4",
+                      "title": "Formatear números y fechas con f-strings"
+                    }
+                  ],
+                  "doneWhen": "Resuelves sin mirar: contar palabras de un texto con un diccionario y filtrar una lista con una comprehension."
+                },
+                {
+                  "id": "w1-prework",
+                  "title": "Empezar el prework oficial de Ironhack",
+                  "type": "practice",
+                  "skills": [],
+                  "estimateMinutes": 60,
+                  "description": "Entra en la plataforma de Ironhack y completa los primeros módulos del prework.",
+                  "why": "El prework es lo que el bootcamp da por sabido el primer día.",
+                  "resources": [
+                    {
+                      "title": "Ironhack (portal del bootcamp)",
+                      "url": "https://www.ironhack.com/",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Kaggle Learn: Python",
+                      "url": "https://www.kaggle.com/learn/python",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-prework-1",
+                      "title": "Acceder a la plataforma del prework"
+                    },
+                    {
+                      "id": "w1-prework-2",
+                      "title": "Completar el primer módulo"
+                    },
+                    {
+                      "id": "w1-prework-3",
+                      "title": "Apuntar lo que no entiendas"
+                    }
+                  ],
+                  "doneWhen": "Has completado al menos el primer módulo del prework."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-04",
+              "title": "Funciones, errores y archivos",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w1-functions",
+                  "title": "Funciones, args/kwargs, excepciones, módulos e imports",
+                  "type": "concept",
+                  "skills": [
+                    "python"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Escribe funciones con parámetros por defecto, *args y **kwargs, captura excepciones y organiza código en módulos.",
+                  "why": "El código de IA real son muchas funciones pequeñas repartidas en módulos; sin esto no escala.",
+                  "resources": [
+                    {
+                      "title": "Python docs: definir funciones",
+                      "url": "https://docs.python.org/3/tutorial/controlflow.html#defining-functions",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Real Python: *args y **kwargs",
+                      "url": "https://realpython.com/python-kwargs-and-args/",
+                      "kind": "article"
+                    },
+                    {
+                      "title": "Python docs: errores y excepciones",
+                      "url": "https://docs.python.org/3/tutorial/errors.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Python docs: módulos",
+                      "url": "https://docs.python.org/3/tutorial/modules.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-functions-1",
+                      "title": "Escribir funciones con valores por defecto y keyword arguments"
+                    },
+                    {
+                      "id": "w1-functions-2",
+                      "title": "Usar *args y **kwargs en un ejemplo propio"
+                    },
+                    {
+                      "id": "w1-functions-3",
+                      "title": "Capturar y lanzar excepciones propias"
+                    },
+                    {
+                      "id": "w1-functions-4",
+                      "title": "Separar el código en dos módulos e importarlos"
+                    }
+                  ],
+                  "doneWhen": "Tienes un pequeño paquete con 2 módulos, funciones documentadas y manejo de errores."
+                },
+                {
+                  "id": "w1-files",
+                  "title": "Archivos, CSV y JSON",
+                  "type": "practice",
+                  "skills": [
+                    "python"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Lee y escribe archivos de texto, CSV y JSON con la librería estándar.",
+                  "why": "Casi todos los datos que usarás vienen en CSV o JSON.",
+                  "resources": [
+                    {
+                      "title": "Python docs: lectura y escritura de archivos",
+                      "url": "https://docs.python.org/3/tutorial/inputoutput.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Python docs: módulo csv",
+                      "url": "https://docs.python.org/3/library/csv.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-files-1",
+                      "title": "Leer y escribir un archivo de texto con `with open`"
+                    },
+                    {
+                      "id": "w1-files-2",
+                      "title": "Leer un CSV con `csv.DictReader`"
+                    },
+                    {
+                      "id": "w1-files-3",
+                      "title": "Guardar y cargar datos en JSON"
+                    }
+                  ],
+                  "doneWhen": "Un script lee un CSV, calcula un total y lo guarda en JSON."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-05",
+              "title": "POO y estilo",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w1-oop",
+                  "title": "Clases y POO en Python (comparado con C++)",
+                  "type": "concept",
+                  "skills": [
+                    "python"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Clases, `__init__`, métodos, herencia y dataclasses, comparándolo con lo que ya sabes de C++.",
+                  "why": "Librerías como scikit-learn o PyTorch se usan a través de clases; entender su modelo te ahorra mucha confusión.",
+                  "resources": [
+                    {
+                      "title": "Python docs: clases",
+                      "url": "https://docs.python.org/3/tutorial/classes.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Real Python: POO en Python",
+                      "url": "https://realpython.com/python3-object-oriented-programming/",
+                      "kind": "article"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-oop-1",
+                      "title": "Escribir una clase con `__init__` y métodos"
+                    },
+                    {
+                      "id": "w1-oop-2",
+                      "title": "Comparar con C++: `self`, visibilidad y herencia"
+                    },
+                    {
+                      "id": "w1-oop-3",
+                      "title": "Reescribirla como `@dataclass`"
+                    },
+                    {
+                      "id": "w1-oop-4",
+                      "title": "Implementar `__repr__` y `__eq__`"
+                    }
+                  ],
+                  "doneWhen": "Modelas un gasto como dataclass y una cartera de gastos como clase con métodos."
+                },
+                {
+                  "id": "w1-style",
+                  "title": "Type hints y estilo PEP 8",
+                  "type": "concept",
+                  "skills": [
+                    "python"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Añade type hints a tu código y aplica PEP 8 con un formateador y un linter.",
+                  "why": "Código tipado y con estilo uniforme es más fácil de leer, revisar y depurar en equipo.",
+                  "resources": [
+                    {
+                      "title": "PEP 8: guía de estilo",
+                      "url": "https://peps.python.org/pep-0008/",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Python docs: typing",
+                      "url": "https://docs.python.org/3/library/typing.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Chuleta de type hints (mypy)",
+                      "url": "https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-style-1",
+                      "title": "Añadir type hints a tus funciones de la semana"
+                    },
+                    {
+                      "id": "w1-style-2",
+                      "title": "Instalar y ejecutar `ruff` o `black`"
+                    },
+                    {
+                      "id": "w1-style-3",
+                      "title": "Pasar `mypy` y corregir los avisos"
+                    }
+                  ],
+                  "doneWhen": "Tu código pasa el formateador y mypy sin errores."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-06",
+              "title": "Notebooks y tests",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w1-jupyter",
+                  "title": "Jupyter notebooks: cuándo usarlos y cuándo no",
+                  "type": "practice",
+                  "skills": [
+                    "tooling"
+                  ],
+                  "estimateMinutes": 45,
+                  "description": "Usa notebooks en VS Code para explorar y entiende por qué el código final va en módulos.",
+                  "why": "En data science explorarás en notebooks, pero los proyectos que se mantienen viven en .py.",
+                  "resources": [
+                    {
+                      "title": "VS Code: Jupyter notebooks",
+                      "url": "https://code.visualstudio.com/docs/datascience/jupyter-notebooks",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Prueba Jupyter en el navegador",
+                      "url": "https://jupyter.org/try",
+                      "kind": "practice"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-jupyter-1",
+                      "title": "Crear un notebook en VS Code con el entorno del proyecto"
+                    },
+                    {
+                      "id": "w1-jupyter-2",
+                      "title": "Mezclar celdas de código y Markdown"
+                    },
+                    {
+                      "id": "w1-jupyter-3",
+                      "title": "Mover una función útil del notebook a un módulo"
+                    }
+                  ],
+                  "doneWhen": "Tienes un notebook que importa funciones de tu propio módulo."
+                },
+                {
+                  "id": "w1-testing",
+                  "title": "Tests con pytest",
+                  "type": "practice",
+                  "skills": [
+                    "python",
+                    "tooling"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Escribe tests automáticos para tus funciones con pytest.",
+                  "why": "Los tests te dejan cambiar código sin miedo; en proyectos de IA protegen la parte determinista.",
+                  "resources": [
+                    {
+                      "title": "pytest: primeros pasos",
+                      "url": "https://docs.pytest.org/en/stable/getting-started.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-testing-1",
+                      "title": "Instalar pytest en el entorno"
+                    },
+                    {
+                      "id": "w1-testing-2",
+                      "title": "Escribir 3 tests para funciones de la semana"
+                    },
+                    {
+                      "id": "w1-testing-3",
+                      "title": "Hacer que un test falle y arreglarlo"
+                    }
+                  ],
+                  "doneWhen": "`pytest` pasa con al menos 3 tests propios."
+                },
+                {
+                  "id": "w1-cli-design",
+                  "title": "Diseñar la CLI del entregable",
+                  "type": "practice",
+                  "skills": [
+                    "python"
+                  ],
+                  "estimateMinutes": 45,
+                  "description": "Decide comandos, formato del CSV y estructura de módulos de tu gestor de gastos antes de programarlo.",
+                  "why": "Diseñar antes de programar evita reescribir el proyecto a mitad.",
+                  "resources": [
+                    {
+                      "title": "Python docs: argparse",
+                      "url": "https://docs.python.org/3/library/argparse.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-cli-design-1",
+                      "title": "Definir los comandos (añadir, listar, resumen)"
+                    },
+                    {
+                      "id": "w1-cli-design-2",
+                      "title": "Definir las columnas del CSV"
+                    },
+                    {
+                      "id": "w1-cli-design-3",
+                      "title": "Esbozar los módulos y sus funciones"
+                    }
+                  ],
+                  "doneWhen": "Tienes un README con los comandos y la estructura del proyecto."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-07",
+              "title": "Entregable: gestor de gastos",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w1-deliverable",
+                  "title": "Entregable: herramienta CLI (gestor de gastos con CSV) en un repo con README",
+                  "type": "deliverable",
+                  "skills": [
+                    "python",
+                    "tooling"
+                  ],
+                  "estimateMinutes": 150,
+                  "description": "Construye una CLI que añade, lista y resume gastos guardados en CSV, con tests y un README.",
+                  "why": "Es tu primer proyecto de portfolio y junta todo lo de la semana.",
+                  "resources": [
+                    {
+                      "title": "Python docs: argparse",
+                      "url": "https://docs.python.org/3/library/argparse.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Python docs: módulo csv",
+                      "url": "https://docs.python.org/3/library/csv.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "pytest: primeros pasos",
+                      "url": "https://docs.pytest.org/en/stable/getting-started.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-deliverable-1",
+                      "title": "Implementar los comandos con argparse"
+                    },
+                    {
+                      "id": "w1-deliverable-2",
+                      "title": "Guardar y leer los gastos en CSV"
+                    },
+                    {
+                      "id": "w1-deliverable-3",
+                      "title": "Añadir el resumen por categoría"
+                    },
+                    {
+                      "id": "w1-deliverable-4",
+                      "title": "Escribir tests"
+                    },
+                    {
+                      "id": "w1-deliverable-5",
+                      "title": "Publicar el repo con README"
+                    }
+                  ],
+                  "doneWhen": "El repo está en GitHub, los tests pasan y el README explica cómo usarlo."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-08",
+              "title": "Repaso",
+              "kind": "review",
+              "tasks": [
+                {
+                  "id": "w1-review",
+                  "title": "Repaso de la semana: Python y entorno",
+                  "type": "review",
+                  "skills": [
+                    "python",
+                    "tooling"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Relee tus notas de la semana, repite los ejercicios que más te costaron y apunta dudas para el bootcamp.",
+                  "why": "Repasar a los pocos días fija lo aprendido mucho mejor que estudiar algo nuevo sin parar.",
+                  "resources": [
+                    {
+                      "title": "Tutorial oficial de Python",
+                      "url": "https://docs.python.org/3/tutorial/index.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Kaggle Learn: Python",
+                      "url": "https://www.kaggle.com/learn/python",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w1-review-1",
+                      "title": "Relee las notas de cada tarea de la semana"
+                    },
+                    {
+                      "id": "w1-review-2",
+                      "title": "Repite el ejercicio que más te costó sin mirar la solución"
+                    },
+                    {
+                      "id": "w1-review-3",
+                      "title": "Pide al coach un examen de la habilidad más floja"
+                    },
+                    {
+                      "id": "w1-review-4",
+                      "title": "Apunta 3 dudas abiertas"
+                    }
+                  ],
+                  "doneWhen": "Has hecho el examen del coach y tienes una lista de dudas apuntada."
+                }
+              ]
+            }
           ]
         },
         {
           "id": "w2",
           "number": 2,
           "title": "Datos y las matemáticas justas",
+          "goal": "Explorar y limpiar un dataset real con pandas y SQL y entender las matemáticas que usa el ML.",
           "start": "2026-11-09",
           "end": "2026-11-15",
-          "tasks": [
-            { "id": "w2-numpy", "title": "NumPy: arrays, vectorización, broadcasting", "type": "concept", "skills": ["numpy-pandas"] },
-            { "id": "w2-pandas", "title": "Pandas: cargar, filtrar, agrupar, unir y limpiar datos", "type": "practice", "skills": ["numpy-pandas"] },
-            { "id": "w2-viz", "title": "Visualización básica con Matplotlib o Seaborn", "type": "practice", "skills": ["numpy-pandas"] },
-            { "id": "w2-sql", "title": "SQL básico: SELECT, WHERE, GROUP BY, JOIN", "type": "practice", "skills": ["sql"] },
-            { "id": "w2-math", "title": "Vectores, matrices, producto escalar, gradiente, probabilidad", "type": "concept", "skills": ["math"] },
-            { "id": "w2-deliverable", "title": "Entregable: EDA de un dataset de Kaggle con 3-5 conclusiones", "type": "deliverable", "skills": ["numpy-pandas"] }
+          "days": [
+            {
+              "date": "2026-11-09",
+              "title": "NumPy",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w2-numpy",
+                  "title": "NumPy: arrays, vectorización, broadcasting",
+                  "type": "concept",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Crea y manipula arrays, sustituye bucles por operaciones vectorizadas y entiende el broadcasting.",
+                  "why": "Todo el ML numérico (scikit-learn, PyTorch) está construido sobre arrays tipo NumPy.",
+                  "resources": [
+                    {
+                      "title": "NumPy para principiantes absolutos",
+                      "url": "https://numpy.org/doc/stable/user/absolute_beginners.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "NumPy: broadcasting",
+                      "url": "https://numpy.org/doc/stable/user/basics.broadcasting.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-numpy-1",
+                      "title": "Crear arrays y consultar shape y dtype"
+                    },
+                    {
+                      "id": "w2-numpy-2",
+                      "title": "Indexar y filtrar con máscaras booleanas"
+                    },
+                    {
+                      "id": "w2-numpy-3",
+                      "title": "Reescribir un bucle como operación vectorizada"
+                    },
+                    {
+                      "id": "w2-numpy-4",
+                      "title": "Predecir el resultado de 3 casos de broadcasting"
+                    }
+                  ],
+                  "doneWhen": "Explicas el broadcasting con un ejemplo propio y tu versión vectorizada es más rápida que el bucle."
+                },
+                {
+                  "id": "w2-numpy-practice",
+                  "title": "Ejercicios de NumPy",
+                  "type": "practice",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Resuelve ejercicios cortos de NumPy: estadísticas, normalización y operaciones con matrices.",
+                  "why": "La soltura llega practicando, no leyendo.",
+                  "resources": [
+                    {
+                      "title": "NumPy para principiantes absolutos",
+                      "url": "https://numpy.org/doc/stable/user/absolute_beginners.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-numpy-practice-1",
+                      "title": "Normalizar las columnas de una matriz"
+                    },
+                    {
+                      "id": "w2-numpy-practice-2",
+                      "title": "Calcular media y desviación por fila"
+                    },
+                    {
+                      "id": "w2-numpy-practice-3",
+                      "title": "Multiplicar matrices con `@`"
+                    }
+                  ],
+                  "doneWhen": "Resuelves los ejercicios sin bucles de Python."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-10",
+              "title": "Pandas I",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w2-pandas",
+                  "title": "Pandas: cargar, filtrar, agrupar, unir y limpiar datos",
+                  "type": "practice",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Carga un CSV en un DataFrame, selecciona y filtra filas, crea columnas, agrupa y une tablas.",
+                  "why": "pandas es la herramienta diaria para preparar los datos de cualquier modelo.",
+                  "resources": [
+                    {
+                      "title": "pandas en 10 minutos",
+                      "url": "https://pandas.pydata.org/docs/user_guide/10min.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Kaggle Learn: Pandas",
+                      "url": "https://www.kaggle.com/learn/pandas",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-pandas-1",
+                      "title": "Completar pandas en 10 minutos"
+                    },
+                    {
+                      "id": "w2-pandas-2",
+                      "title": "Hacer las lecciones 1-3 de Kaggle Pandas"
+                    },
+                    {
+                      "id": "w2-pandas-3",
+                      "title": "Filtrar y crear columnas en un dataset real"
+                    },
+                    {
+                      "id": "w2-pandas-4",
+                      "title": "Unir dos tablas con `merge`"
+                    }
+                  ],
+                  "doneWhen": "Respondes 3 preguntas sobre un dataset real usando solo pandas."
+                },
+                {
+                  "id": "w2-groupby",
+                  "title": "Agrupar y resumir con groupby",
+                  "type": "practice",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Domina `groupby`, `agg` y las tablas dinámicas para resumir datos.",
+                  "why": "Resumir por grupos es la forma más rápida de encontrar patrones antes de modelar.",
+                  "resources": [
+                    {
+                      "title": "Kaggle Learn: Pandas",
+                      "url": "https://www.kaggle.com/learn/pandas",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-groupby-1",
+                      "title": "Agrupar por una y por dos columnas"
+                    },
+                    {
+                      "id": "w2-groupby-2",
+                      "title": "Usar varias agregaciones con `agg`"
+                    },
+                    {
+                      "id": "w2-groupby-3",
+                      "title": "Crear una tabla con `pivot_table`"
+                    }
+                  ],
+                  "doneWhen": "Sacas un resumen por grupos que responde a una pregunta concreta."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-11",
+              "title": "Limpieza y visualización",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w2-cleaning",
+                  "title": "Limpieza de datos",
+                  "type": "practice",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Detecta y trata valores nulos, duplicados, tipos incorrectos y outliers.",
+                  "why": "Los datos reales siempre están sucios; un modelo con datos sucios aprende basura.",
+                  "resources": [
+                    {
+                      "title": "Kaggle Learn: Data Cleaning",
+                      "url": "https://www.kaggle.com/learn/data-cleaning",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-cleaning-1",
+                      "title": "Contar y tratar nulos"
+                    },
+                    {
+                      "id": "w2-cleaning-2",
+                      "title": "Eliminar duplicados"
+                    },
+                    {
+                      "id": "w2-cleaning-3",
+                      "title": "Convertir tipos y fechas"
+                    }
+                  ],
+                  "doneWhen": "Tu dataset no tiene nulos sin justificar ni tipos incorrectos."
+                },
+                {
+                  "id": "w2-viz",
+                  "title": "Visualización básica con Matplotlib o Seaborn",
+                  "type": "practice",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Haz histogramas, diagramas de dispersión, de barras y de cajas, y elige el adecuado para cada pregunta.",
+                  "why": "Un buen gráfico revela problemas y patrones que una tabla esconde.",
+                  "resources": [
+                    {
+                      "title": "Kaggle Learn: Data Visualization",
+                      "url": "https://www.kaggle.com/learn/data-visualization",
+                      "kind": "course"
+                    },
+                    {
+                      "title": "Tutorial de seaborn",
+                      "url": "https://seaborn.pydata.org/tutorial.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Matplotlib: guía rápida",
+                      "url": "https://matplotlib.org/stable/users/explain/quick_start.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-viz-1",
+                      "title": "Hacer un histograma y un boxplot"
+                    },
+                    {
+                      "id": "w2-viz-2",
+                      "title": "Hacer un scatter con color por categoría"
+                    },
+                    {
+                      "id": "w2-viz-3",
+                      "title": "Comparar grupos con un gráfico de barras"
+                    },
+                    {
+                      "id": "w2-viz-4",
+                      "title": "Poner título y ejes legibles"
+                    }
+                  ],
+                  "doneWhen": "Tienes 4 gráficos distintos, cada uno respondiendo a una pregunta."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-12",
+              "title": "SQL",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w2-sql",
+                  "title": "SQL básico: SELECT, WHERE, GROUP BY, JOIN",
+                  "type": "practice",
+                  "skills": [
+                    "sql"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Aprende a consultar tablas: seleccionar, filtrar, ordenar, agregar y unir.",
+                  "why": "En las empresas los datos viven en bases de datos; SQL es lo primero que te piden.",
+                  "resources": [
+                    {
+                      "title": "SQLBolt: SQL interactivo",
+                      "url": "https://sqlbolt.com/",
+                      "kind": "practice"
+                    },
+                    {
+                      "title": "Kaggle Learn: Intro to SQL",
+                      "url": "https://www.kaggle.com/learn/intro-to-sql",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-sql-1",
+                      "title": "Completar las lecciones 1-6 de SQLBolt"
+                    },
+                    {
+                      "id": "w2-sql-2",
+                      "title": "Completar las lecciones 7-12 (JOIN y agregados)"
+                    },
+                    {
+                      "id": "w2-sql-3",
+                      "title": "Hacer la primera lección de Kaggle SQL"
+                    }
+                  ],
+                  "doneWhen": "Escribes sin ayuda una consulta con JOIN y GROUP BY."
+                },
+                {
+                  "id": "w2-sql-python",
+                  "title": "SQL desde Python",
+                  "type": "practice",
+                  "skills": [
+                    "sql",
+                    "python"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Carga un CSV en SQLite desde Python y consulta la base con SQL y con pandas.",
+                  "why": "En proyectos reales combinarás SQL para extraer y pandas para analizar.",
+                  "resources": [
+                    {
+                      "title": "Python docs: sqlite3",
+                      "url": "https://docs.python.org/3/library/sqlite3.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "pandas en 10 minutos",
+                      "url": "https://pandas.pydata.org/docs/user_guide/10min.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-sql-python-1",
+                      "title": "Crear una base SQLite desde un DataFrame"
+                    },
+                    {
+                      "id": "w2-sql-python-2",
+                      "title": "Ejecutar consultas con `sqlite3`"
+                    },
+                    {
+                      "id": "w2-sql-python-3",
+                      "title": "Leer el resultado con `pd.read_sql`"
+                    }
+                  ],
+                  "doneWhen": "Un script crea la base, la consulta y muestra el resultado en pandas."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-13",
+              "title": "Matemáticas para IA",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w2-math",
+                  "title": "Vectores, matrices, producto escalar, gradiente, probabilidad",
+                  "type": "concept",
+                  "skills": [
+                    "math"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Construye la intuición de vectores, matrices y producto escalar con vídeos visuales.",
+                  "why": "Un embedding es un vector y una red neuronal son multiplicaciones de matrices; esto es su lenguaje.",
+                  "resources": [
+                    {
+                      "title": "3Blue1Brown: Essence of Linear Algebra",
+                      "url": "https://www.3blue1brown.com/topics/linear-algebra",
+                      "kind": "video"
+                    },
+                    {
+                      "title": "Khan Academy: álgebra lineal",
+                      "url": "https://www.khanacademy.org/math/linear-algebra",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-math-1",
+                      "title": "Ver los capítulos 1-4 de Essence of Linear Algebra"
+                    },
+                    {
+                      "id": "w2-math-2",
+                      "title": "Calcular a mano un producto escalar y uno de matrices"
+                    },
+                    {
+                      "id": "w2-math-3",
+                      "title": "Explicar qué mide el producto escalar entre dos vectores"
+                    }
+                  ],
+                  "doneWhen": "Explicas con tus palabras qué es una matriz como transformación y qué mide el producto escalar."
+                },
+                {
+                  "id": "w2-calc-prob",
+                  "title": "Gradiente y probabilidad básica",
+                  "type": "concept",
+                  "skills": [
+                    "math"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Entiende la derivada como pendiente, el gradiente como dirección de subida y la probabilidad condicional.",
+                  "why": "Los modelos aprenden bajando por el gradiente y razonan con probabilidades.",
+                  "resources": [
+                    {
+                      "title": "3Blue1Brown: Essence of Calculus",
+                      "url": "https://www.3blue1brown.com/topics/calculus",
+                      "kind": "video"
+                    },
+                    {
+                      "title": "Khan Academy: estadística y probabilidad",
+                      "url": "https://www.khanacademy.org/math/statistics-probability",
+                      "kind": "course"
+                    },
+                    {
+                      "title": "StatQuest (YouTube)",
+                      "url": "https://www.youtube.com/@statquest",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-calc-prob-1",
+                      "title": "Ver el capítulo 1 de Essence of Calculus"
+                    },
+                    {
+                      "id": "w2-calc-prob-2",
+                      "title": "Repasar probabilidad condicional en Khan Academy"
+                    },
+                    {
+                      "id": "w2-calc-prob-3",
+                      "title": "Ver el vídeo de StatQuest sobre gradient descent"
+                    }
+                  ],
+                  "doneWhen": "Explicas por qué bajar por el gradiente reduce el error de un modelo."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-14",
+              "title": "Entregable: análisis exploratorio",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w2-deliverable",
+                  "title": "Entregable: EDA de un dataset de Kaggle con 3-5 conclusiones",
+                  "type": "deliverable",
+                  "skills": [
+                    "numpy-pandas"
+                  ],
+                  "estimateMinutes": 150,
+                  "description": "Elige un dataset de Kaggle, límpialo, explóralo con pandas y gráficos y presenta 3-5 conclusiones.",
+                  "why": "Un EDA bien contado es una pieza de portfolio y el primer paso de cualquier proyecto de ML.",
+                  "resources": [
+                    {
+                      "title": "Kaggle: datasets",
+                      "url": "https://www.kaggle.com/datasets",
+                      "kind": "practice"
+                    },
+                    {
+                      "title": "Kaggle Learn: Data Visualization",
+                      "url": "https://www.kaggle.com/learn/data-visualization",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-deliverable-1",
+                      "title": "Elegir un dataset y plantear 3 preguntas"
+                    },
+                    {
+                      "id": "w2-deliverable-2",
+                      "title": "Limpiar los datos"
+                    },
+                    {
+                      "id": "w2-deliverable-3",
+                      "title": "Responder cada pregunta con un gráfico"
+                    },
+                    {
+                      "id": "w2-deliverable-4",
+                      "title": "Escribir las conclusiones"
+                    },
+                    {
+                      "id": "w2-deliverable-5",
+                      "title": "Publicar el notebook en GitHub"
+                    }
+                  ],
+                  "doneWhen": "El notebook está en GitHub y tiene 3-5 conclusiones apoyadas en gráficos."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-15",
+              "title": "Repaso",
+              "kind": "review",
+              "tasks": [
+                {
+                  "id": "w2-review",
+                  "title": "Repaso de la semana: datos y matemáticas",
+                  "type": "review",
+                  "skills": [
+                    "numpy-pandas",
+                    "sql",
+                    "math"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Relee tus notas de la semana, repite los ejercicios que más te costaron y apunta dudas para el bootcamp.",
+                  "why": "Repasar a los pocos días fija lo aprendido mucho mejor que estudiar algo nuevo sin parar.",
+                  "resources": [
+                    {
+                      "title": "pandas en 10 minutos",
+                      "url": "https://pandas.pydata.org/docs/user_guide/10min.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "SQLBolt: SQL interactivo",
+                      "url": "https://sqlbolt.com/",
+                      "kind": "practice"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w2-review-1",
+                      "title": "Relee las notas de cada tarea de la semana"
+                    },
+                    {
+                      "id": "w2-review-2",
+                      "title": "Repite el ejercicio que más te costó sin mirar la solución"
+                    },
+                    {
+                      "id": "w2-review-3",
+                      "title": "Pide al coach un examen de la habilidad más floja"
+                    },
+                    {
+                      "id": "w2-review-4",
+                      "title": "Apunta 3 dudas abiertas"
+                    }
+                  ],
+                  "doneWhen": "Has hecho el examen del coach y tienes una lista de dudas apuntada."
+                }
+              ]
+            }
           ]
         },
         {
           "id": "w3",
           "number": 3,
           "title": "Machine learning clásico",
+          "goal": "Entrenar, validar, evaluar y explicar un modelo de principio a fin con scikit-learn.",
           "start": "2026-11-16",
           "end": "2026-11-22",
-          "tasks": [
-            { "id": "w3-types", "title": "Aprendizaje supervisado vs no supervisado", "type": "concept", "skills": ["ml"] },
-            { "id": "w3-validation", "title": "Train/test split, overfitting, validación cruzada", "type": "concept", "skills": ["ml"] },
-            { "id": "w3-models", "title": "Regresión lineal y logística, árboles y random forest", "type": "concept", "skills": ["ml"] },
-            { "id": "w3-metrics", "title": "Métricas: accuracy, precision, recall, F1, matriz de confusión", "type": "concept", "skills": ["ml"] },
-            { "id": "w3-sklearn", "title": "scikit-learn de principio a fin", "type": "practice", "skills": ["ml"] },
-            { "id": "w3-nn", "title": "Redes neuronales a nivel intuitivo", "type": "concept", "skills": ["neural-nets"] },
-            { "id": "w3-deliverable", "title": "Entregable: clasificador con scikit-learn explicado con SHAP", "type": "deliverable", "skills": ["ml"] }
+          "days": [
+            {
+              "date": "2026-11-16",
+              "title": "Qué significa aprender",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w3-types",
+                  "title": "Aprendizaje supervisado vs no supervisado",
+                  "type": "concept",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Distingue regresión, clasificación y clustering y qué datos necesita cada uno.",
+                  "why": "Elegir el tipo de problema correcto es la primera decisión de cualquier proyecto de ML.",
+                  "resources": [
+                    {
+                      "title": "Google: Machine Learning Crash Course",
+                      "url": "https://developers.google.com/machine-learning/crash-course",
+                      "kind": "course"
+                    },
+                    {
+                      "title": "StatQuest (YouTube)",
+                      "url": "https://www.youtube.com/@statquest",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-types-1",
+                      "title": "Leer la introducción de Google ML Crash Course"
+                    },
+                    {
+                      "id": "w3-types-2",
+                      "title": "Clasificar 5 problemas reales por tipo"
+                    },
+                    {
+                      "id": "w3-types-3",
+                      "title": "Explicar qué es una etiqueta y una característica"
+                    }
+                  ],
+                  "doneWhen": "Clasificas correctamente 5 problemas como regresión, clasificación o clustering."
+                },
+                {
+                  "id": "w3-validation",
+                  "title": "Train/test split, overfitting, validación cruzada",
+                  "type": "concept",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Entiende por qué se separan los datos, qué es el sobreajuste y cómo la validación cruzada da una medida fiable.",
+                  "why": "Un modelo que solo funciona con sus datos de entrenamiento no sirve para nada.",
+                  "resources": [
+                    {
+                      "title": "scikit-learn: validación cruzada",
+                      "url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Kaggle Learn: Intermediate Machine Learning",
+                      "url": "https://www.kaggle.com/learn/intermediate-machine-learning",
+                      "kind": "course"
+                    },
+                    {
+                      "title": "StatQuest (YouTube)",
+                      "url": "https://www.youtube.com/@statquest",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-validation-1",
+                      "title": "Ver el vídeo de StatQuest sobre cross validation"
+                    },
+                    {
+                      "id": "w3-validation-2",
+                      "title": "Hacer un train/test split en scikit-learn"
+                    },
+                    {
+                      "id": "w3-validation-3",
+                      "title": "Provocar overfitting con un árbol profundo"
+                    },
+                    {
+                      "id": "w3-validation-4",
+                      "title": "Usar `cross_val_score`"
+                    }
+                  ],
+                  "doneWhen": "Muestras con números un caso de overfitting y cómo lo detecta la validación cruzada."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-17",
+              "title": "Modelos clásicos",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w3-models",
+                  "title": "Regresión lineal y logística, árboles y random forest",
+                  "type": "concept",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Aprende la intuición de los modelos clásicos más usados y cuándo elegir cada uno.",
+                  "why": "Con datos tabulares estos modelos siguen ganando a menudo a las redes neuronales.",
+                  "resources": [
+                    {
+                      "title": "StatQuest (YouTube)",
+                      "url": "https://www.youtube.com/@statquest",
+                      "kind": "video"
+                    },
+                    {
+                      "title": "scikit-learn: guía de usuario",
+                      "url": "https://scikit-learn.org/stable/user_guide.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-models-1",
+                      "title": "Ver StatQuest de regresión lineal y logística"
+                    },
+                    {
+                      "id": "w3-models-2",
+                      "title": "Ver StatQuest de árboles y random forest"
+                    },
+                    {
+                      "id": "w3-models-3",
+                      "title": "Entrenar los cuatro modelos sobre el mismo dataset"
+                    }
+                  ],
+                  "doneWhen": "Explicas cuándo usarías regresión logística frente a random forest."
+                },
+                {
+                  "id": "w3-kaggle-ml",
+                  "title": "Curso Intro to Machine Learning de Kaggle",
+                  "type": "practice",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Completa el curso introductorio de Kaggle, que entrena modelos sobre datos reales de viviendas.",
+                  "why": "Es la forma más rápida de pasar de la teoría a tu primer modelo funcionando.",
+                  "resources": [
+                    {
+                      "title": "Kaggle Learn: Intro to Machine Learning",
+                      "url": "https://www.kaggle.com/learn/intro-to-machine-learning",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-kaggle-ml-1",
+                      "title": "Completar las lecciones 1-4"
+                    },
+                    {
+                      "id": "w3-kaggle-ml-2",
+                      "title": "Completar las lecciones 5-7"
+                    },
+                    {
+                      "id": "w3-kaggle-ml-3",
+                      "title": "Hacer el envío final a la competición"
+                    }
+                  ],
+                  "doneWhen": "Tienes el curso completo y un envío en la competición de Kaggle."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-18",
+              "title": "Métricas y features",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w3-metrics",
+                  "title": "Métricas: accuracy, precision, recall, F1, matriz de confusión",
+                  "type": "concept",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Aprende qué mide cada métrica y por qué la accuracy engaña con clases desbalanceadas.",
+                  "why": "Elegir mal la métrica lleva a modelos que parecen buenos y fallan donde importa.",
+                  "resources": [
+                    {
+                      "title": "scikit-learn: evaluación de modelos",
+                      "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "StatQuest (YouTube)",
+                      "url": "https://www.youtube.com/@statquest",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-metrics-1",
+                      "title": "Calcular a mano precision y recall de una matriz de confusión"
+                    },
+                    {
+                      "id": "w3-metrics-2",
+                      "title": "Usar `classification_report`"
+                    },
+                    {
+                      "id": "w3-metrics-3",
+                      "title": "Encontrar un caso donde la accuracy engaña"
+                    }
+                  ],
+                  "doneWhen": "Explicas qué métrica elegirías para detectar fraude y por qué."
+                },
+                {
+                  "id": "w3-features",
+                  "title": "Preprocesado y feature engineering",
+                  "type": "practice",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Escala variables numéricas, codifica categóricas y crea características nuevas.",
+                  "why": "Mejores features suelen mejorar más un modelo que cambiar de algoritmo.",
+                  "resources": [
+                    {
+                      "title": "Kaggle Learn: Feature Engineering",
+                      "url": "https://www.kaggle.com/learn/feature-engineering",
+                      "kind": "course"
+                    },
+                    {
+                      "title": "scikit-learn: pipelines y composición",
+                      "url": "https://scikit-learn.org/stable/modules/compose.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-features-1",
+                      "title": "Escalar con `StandardScaler`"
+                    },
+                    {
+                      "id": "w3-features-2",
+                      "title": "Codificar con `OneHotEncoder`"
+                    },
+                    {
+                      "id": "w3-features-3",
+                      "title": "Crear una feature nueva y medir su efecto"
+                    }
+                  ],
+                  "doneWhen": "Una feature nueva mejora la métrica de validación de tu modelo."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-19",
+              "title": "scikit-learn de principio a fin",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w3-sklearn",
+                  "title": "scikit-learn de principio a fin",
+                  "type": "practice",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Haz un proyecto completo: carga, preprocesado, entrenamiento, validación y evaluación final.",
+                  "why": "Es exactamente el flujo que repetirás en el bootcamp y en el trabajo.",
+                  "resources": [
+                    {
+                      "title": "scikit-learn: getting started",
+                      "url": "https://scikit-learn.org/stable/getting_started.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Kaggle Learn: Intermediate Machine Learning",
+                      "url": "https://www.kaggle.com/learn/intermediate-machine-learning",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-sklearn-1",
+                      "title": "Preparar los datos"
+                    },
+                    {
+                      "id": "w3-sklearn-2",
+                      "title": "Comparar 3 modelos con validación cruzada"
+                    },
+                    {
+                      "id": "w3-sklearn-3",
+                      "title": "Ajustar hiperparámetros con `GridSearchCV`"
+                    },
+                    {
+                      "id": "w3-sklearn-4",
+                      "title": "Evaluar una única vez en test"
+                    }
+                  ],
+                  "doneWhen": "Tienes un notebook que va de los datos crudos a una métrica de test justificada."
+                },
+                {
+                  "id": "w3-pipeline",
+                  "title": "Pipelines de scikit-learn",
+                  "type": "practice",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Encadena preprocesado y modelo en un `Pipeline` con `ColumnTransformer`.",
+                  "why": "Los pipelines evitan fugas de datos y hacen el modelo reproducible.",
+                  "resources": [
+                    {
+                      "title": "scikit-learn: pipelines y composición",
+                      "url": "https://scikit-learn.org/stable/modules/compose.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-pipeline-1",
+                      "title": "Crear un `ColumnTransformer` para numéricas y categóricas"
+                    },
+                    {
+                      "id": "w3-pipeline-2",
+                      "title": "Meterlo en un `Pipeline` con el modelo"
+                    },
+                    {
+                      "id": "w3-pipeline-3",
+                      "title": "Guardar el pipeline entrenado con joblib"
+                    }
+                  ],
+                  "doneWhen": "Un único objeto pipeline entrena y predice desde los datos crudos."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-20",
+              "title": "Redes neuronales",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w3-nn",
+                  "title": "Redes neuronales a nivel intuitivo",
+                  "type": "concept",
+                  "skills": [
+                    "neural-nets"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Entiende neuronas, capas, funciones de activación y cómo aprende una red con backpropagation.",
+                  "why": "Los LLMs son redes neuronales enormes; esta intuición es la base de la semana 4.",
+                  "resources": [
+                    {
+                      "title": "3Blue1Brown: Neural Networks",
+                      "url": "https://www.3blue1brown.com/topics/neural-networks",
+                      "kind": "video"
+                    },
+                    {
+                      "title": "Karpathy: Neural Networks Zero to Hero",
+                      "url": "https://karpathy.ai/zero-to-hero.html",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-nn-1",
+                      "title": "Ver los capítulos 1-3 de Neural Networks de 3Blue1Brown"
+                    },
+                    {
+                      "id": "w3-nn-2",
+                      "title": "Ver el inicio de micrograd de Karpathy"
+                    },
+                    {
+                      "id": "w3-nn-3",
+                      "title": "Explicar qué hace backpropagation sin fórmulas"
+                    }
+                  ],
+                  "doneWhen": "Explicas con tus palabras cómo una red ajusta sus pesos."
+                },
+                {
+                  "id": "w3-playground",
+                  "title": "Experimentar en TensorFlow Playground",
+                  "type": "practice",
+                  "skills": [
+                    "neural-nets"
+                  ],
+                  "estimateMinutes": 45,
+                  "description": "Juega con capas, neuronas y tasa de aprendizaje y observa cómo cambia lo que aprende la red.",
+                  "why": "Ver una red aprender en directo fija la intuición mejor que cualquier explicación.",
+                  "resources": [
+                    {
+                      "title": "TensorFlow Playground",
+                      "url": "https://playground.tensorflow.org/",
+                      "kind": "practice"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-playground-1",
+                      "title": "Resolver el dataset espiral"
+                    },
+                    {
+                      "id": "w3-playground-2",
+                      "title": "Provocar overfitting y arreglarlo"
+                    },
+                    {
+                      "id": "w3-playground-3",
+                      "title": "Probar distintas activaciones"
+                    }
+                  ],
+                  "doneWhen": "Resuelves el dataset espiral y explicas qué cambio lo hizo posible."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-21",
+              "title": "Entregable: clasificador explicado",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w3-deliverable",
+                  "title": "Entregable: clasificador con scikit-learn explicado con SHAP",
+                  "type": "deliverable",
+                  "skills": [
+                    "ml"
+                  ],
+                  "estimateMinutes": 150,
+                  "description": "Entrena un clasificador sobre un dataset real, evalúalo bien y explica sus decisiones con SHAP.",
+                  "why": "Saber explicar un modelo es lo que diferencia a quien entiende el ML de quien solo lo usa.",
+                  "resources": [
+                    {
+                      "title": "Documentación de SHAP",
+                      "url": "https://shap.readthedocs.io/en/latest/",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Kaggle Learn: Machine Learning Explainability",
+                      "url": "https://www.kaggle.com/learn/machine-learning-explainability",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-deliverable-1",
+                      "title": "Elegir dataset y métrica justificada"
+                    },
+                    {
+                      "id": "w3-deliverable-2",
+                      "title": "Entrenar con pipeline y validación cruzada"
+                    },
+                    {
+                      "id": "w3-deliverable-3",
+                      "title": "Calcular valores SHAP"
+                    },
+                    {
+                      "id": "w3-deliverable-4",
+                      "title": "Explicar las 3 features más importantes"
+                    },
+                    {
+                      "id": "w3-deliverable-5",
+                      "title": "Publicar en GitHub con README"
+                    }
+                  ],
+                  "doneWhen": "El repo tiene el modelo, su métrica en test y una explicación con gráficos SHAP."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-22",
+              "title": "Repaso",
+              "kind": "review",
+              "tasks": [
+                {
+                  "id": "w3-review",
+                  "title": "Repaso de la semana: machine learning",
+                  "type": "review",
+                  "skills": [
+                    "ml",
+                    "neural-nets"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Relee tus notas de la semana, repite los ejercicios que más te costaron y apunta dudas para el bootcamp.",
+                  "why": "Repasar a los pocos días fija lo aprendido mucho mejor que estudiar algo nuevo sin parar.",
+                  "resources": [
+                    {
+                      "title": "scikit-learn: guía de usuario",
+                      "url": "https://scikit-learn.org/stable/user_guide.html",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "StatQuest (YouTube)",
+                      "url": "https://www.youtube.com/@statquest",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w3-review-1",
+                      "title": "Relee las notas de cada tarea de la semana"
+                    },
+                    {
+                      "id": "w3-review-2",
+                      "title": "Repite el ejercicio que más te costó sin mirar la solución"
+                    },
+                    {
+                      "id": "w3-review-3",
+                      "title": "Pide al coach un examen de la habilidad más floja"
+                    },
+                    {
+                      "id": "w3-review-4",
+                      "title": "Apunta 3 dudas abiertas"
+                    }
+                  ],
+                  "doneWhen": "Has hecho el examen del coach y tienes una lista de dudas apuntada."
+                }
+              ]
+            }
           ]
         },
         {
           "id": "w4",
           "number": 4,
           "title": "LLMs y tu primera app con IA",
+          "goal": "Entender cómo funciona un LLM y construir una app en Python que lo use, con RAG y herramientas.",
           "start": "2026-11-23",
           "end": "2026-11-29",
-          "tasks": [
-            { "id": "w4-llms", "title": "Tokens, embeddings, transformers y atención (intuición)", "type": "concept", "skills": ["llms"] },
-            { "id": "w4-prompting", "title": "Prompt engineering: instrucciones, ejemplos, roles, formato", "type": "concept", "skills": ["prompting"] },
-            { "id": "w4-api", "title": "API de un LLM desde Python: system prompt, streaming, JSON", "type": "practice", "skills": ["llm-apis"] },
-            { "id": "w4-rag", "title": "Qué es RAG y por qué existe", "type": "concept", "skills": ["rag"] },
-            { "id": "w4-agents", "title": "Qué es un agente: un LLM que usa herramientas en bucle", "type": "concept", "skills": ["agents"] },
-            { "id": "w4-prework", "title": "Terminar el prework oficial de Ironhack", "type": "practice", "skills": [] },
-            { "id": "w4-deliverable", "title": "Entregable: mini app en Python que use la API de un LLM", "type": "deliverable", "skills": ["llm-apis"] }
+          "days": [
+            {
+              "date": "2026-11-23",
+              "title": "Cómo funciona un LLM",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w4-llms",
+                  "title": "Tokens, embeddings, transformers y atención (intuición)",
+                  "type": "concept",
+                  "skills": [
+                    "llms"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Entiende cómo un LLM convierte texto en tokens, tokens en vectores y predice la siguiente palabra con atención.",
+                  "why": "Saber cómo funciona por dentro explica sus límites: alucinaciones, contexto y coste por token.",
+                  "resources": [
+                    {
+                      "title": "Karpathy: Intro to Large Language Models",
+                      "url": "https://www.youtube.com/watch?v=zjkBMFhNj_g",
+                      "kind": "video"
+                    },
+                    {
+                      "title": "Jay Alammar: The Illustrated Transformer",
+                      "url": "https://jalammar.github.io/illustrated-transformer/",
+                      "kind": "article"
+                    },
+                    {
+                      "title": "3Blue1Brown: Neural Networks",
+                      "url": "https://www.3blue1brown.com/topics/neural-networks",
+                      "kind": "video"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-llms-1",
+                      "title": "Ver Intro to LLMs de Karpathy"
+                    },
+                    {
+                      "id": "w4-llms-2",
+                      "title": "Leer The Illustrated Transformer"
+                    },
+                    {
+                      "id": "w4-llms-3",
+                      "title": "Ver el capítulo de 3Blue1Brown sobre atención"
+                    }
+                  ],
+                  "doneWhen": "Explicas qué es un token, un embedding y para qué sirve la atención."
+                },
+                {
+                  "id": "w4-hf",
+                  "title": "Curso de LLMs de Hugging Face (capítulo 1)",
+                  "type": "practice",
+                  "skills": [
+                    "llms"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Completa el primer capítulo del curso de Hugging Face sobre transformers.",
+                  "why": "Hugging Face es donde viven los modelos abiertos que usarás en el bootcamp.",
+                  "resources": [
+                    {
+                      "title": "Hugging Face: LLM Course",
+                      "url": "https://huggingface.co/learn/llm-course/chapter1/1",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-hf-1",
+                      "title": "Leer el capítulo 1"
+                    },
+                    {
+                      "id": "w4-hf-2",
+                      "title": "Ejecutar un pipeline de clasificación de texto"
+                    },
+                    {
+                      "id": "w4-hf-3",
+                      "title": "Probar un modelo de generación"
+                    }
+                  ],
+                  "doneWhen": "Ejecutas dos pipelines de transformers en tu máquina o en Colab."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-24",
+              "title": "Prompt engineering",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w4-prompting",
+                  "title": "Prompt engineering: instrucciones, ejemplos, roles, formato",
+                  "type": "concept",
+                  "skills": [
+                    "prompting"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Aprende a escribir prompts claros: contexto, ejemplos, rol, formato de salida y dividir tareas.",
+                  "why": "La calidad de una app con LLM depende sobre todo de cómo le pides las cosas.",
+                  "resources": [
+                    {
+                      "title": "Anthropic: prompt engineering",
+                      "url": "https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Anthropic: tutorial interactivo de prompting",
+                      "url": "https://github.com/anthropics/prompt-eng-interactive-tutorial",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-prompting-1",
+                      "title": "Leer la guía de prompt engineering de Anthropic"
+                    },
+                    {
+                      "id": "w4-prompting-2",
+                      "title": "Hacer los capítulos 1-4 del tutorial interactivo"
+                    },
+                    {
+                      "id": "w4-prompting-3",
+                      "title": "Mejorar un prompt malo en 3 iteraciones"
+                    }
+                  ],
+                  "doneWhen": "Tienes un antes y después de un prompt con resultados claramente mejores."
+                },
+                {
+                  "id": "w4-prompt-lab",
+                  "title": "Laboratorio de prompts",
+                  "type": "practice",
+                  "skills": [
+                    "prompting"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Diseña prompts para tres tareas (resumir, extraer datos, clasificar) y compáralos con casos de prueba.",
+                  "why": "Probar prompts con casos concretos es la forma profesional de mejorarlos.",
+                  "resources": [
+                    {
+                      "title": "Anthropic: tutorial interactivo de prompting",
+                      "url": "https://github.com/anthropics/prompt-eng-interactive-tutorial",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-prompt-lab-1",
+                      "title": "Escribir 5 casos de prueba por tarea"
+                    },
+                    {
+                      "id": "w4-prompt-lab-2",
+                      "title": "Probar dos versiones de cada prompt en claude.ai"
+                    },
+                    {
+                      "id": "w4-prompt-lab-3",
+                      "title": "Quedarte con la mejor y apuntar por qué"
+                    }
+                  ],
+                  "doneWhen": "Tienes 3 prompts probados con casos y una nota de por qué funcionan."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-25",
+              "title": "LLMs desde Python",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w4-api",
+                  "title": "API de un LLM desde Python: system prompt, streaming, JSON",
+                  "type": "practice",
+                  "skills": [
+                    "llm-apis"
+                  ],
+                  "estimateMinutes": 120,
+                  "description": "Llama a un LLM desde Python con system prompt, conversación, streaming y respuesta en JSON. Si no quieres pagar la API, usa un modelo local con Ollama.",
+                  "why": "Es el bloque básico de cualquier app con IA.",
+                  "resources": [
+                    {
+                      "title": "Claude: primeros pasos con la API",
+                      "url": "https://docs.claude.com/en/docs/get-started",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "SDK de Python de Anthropic",
+                      "url": "https://github.com/anthropics/anthropic-sdk-python",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Claude: streaming",
+                      "url": "https://docs.claude.com/en/docs/build-with-claude/streaming",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Ollama: modelos locales gratis",
+                      "url": "https://ollama.com/",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-api-1",
+                      "title": "Hacer la primera llamada con el SDK (o con Ollama)"
+                    },
+                    {
+                      "id": "w4-api-2",
+                      "title": "Añadir un system prompt y varios turnos"
+                    },
+                    {
+                      "id": "w4-api-3",
+                      "title": "Mostrar la respuesta en streaming"
+                    },
+                    {
+                      "id": "w4-api-4",
+                      "title": "Pedir y validar una salida en JSON"
+                    }
+                  ],
+                  "doneWhen": "Un script mantiene una conversación con streaming y extrae datos en JSON válido."
+                },
+                {
+                  "id": "w4-structured",
+                  "title": "Salida estructurada y validación",
+                  "type": "practice",
+                  "skills": [
+                    "llm-apis",
+                    "python"
+                  ],
+                  "estimateMinutes": 45,
+                  "description": "Valida las respuestas del modelo con un esquema y gestiona los errores cuando no cumple el formato.",
+                  "why": "Una app no puede fiarse de texto libre; necesita datos con forma garantizada.",
+                  "resources": [
+                    {
+                      "title": "Claude: primeros pasos con la API",
+                      "url": "https://docs.claude.com/en/docs/get-started",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Python docs: typing",
+                      "url": "https://docs.python.org/3/library/typing.html",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-structured-1",
+                      "title": "Definir el esquema con dataclasses o pydantic"
+                    },
+                    {
+                      "id": "w4-structured-2",
+                      "title": "Validar la respuesta del modelo"
+                    },
+                    {
+                      "id": "w4-structured-3",
+                      "title": "Reintentar o avisar si falla"
+                    }
+                  ],
+                  "doneWhen": "Tu código nunca falla con una respuesta mal formada: la detecta y la gestiona."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-26",
+              "title": "RAG",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w4-rag",
+                  "title": "Qué es RAG y por qué existe",
+                  "type": "concept",
+                  "skills": [
+                    "rag"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Entiende retrieval-augmented generation: trocear documentos, buscar fragmentos relevantes y pasarlos al modelo.",
+                  "why": "RAG es la técnica más usada en empresas para que un LLM responda con datos propios.",
+                  "resources": [
+                    {
+                      "title": "Anthropic: Contextual Retrieval",
+                      "url": "https://www.anthropic.com/news/contextual-retrieval",
+                      "kind": "article"
+                    },
+                    {
+                      "title": "Claude: embeddings",
+                      "url": "https://docs.claude.com/en/docs/build-with-claude/embeddings",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-rag-1",
+                      "title": "Leer Contextual Retrieval de Anthropic"
+                    },
+                    {
+                      "id": "w4-rag-2",
+                      "title": "Dibujar el flujo de un sistema RAG"
+                    },
+                    {
+                      "id": "w4-rag-3",
+                      "title": "Listar 3 fallos típicos y cómo evitarlos"
+                    }
+                  ],
+                  "doneWhen": "Explicas el flujo completo de RAG y por qué reduce las alucinaciones."
+                },
+                {
+                  "id": "w4-embeddings",
+                  "title": "Embeddings y búsqueda por similitud",
+                  "type": "practice",
+                  "skills": [
+                    "rag"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Genera embeddings de frases y busca las más parecidas con similitud coseno.",
+                  "why": "La búsqueda por similitud es el corazón de RAG.",
+                  "resources": [
+                    {
+                      "title": "Claude: embeddings",
+                      "url": "https://docs.claude.com/en/docs/build-with-claude/embeddings",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Hugging Face: LLM Course",
+                      "url": "https://huggingface.co/learn/llm-course/chapter1/1",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-embeddings-1",
+                      "title": "Generar embeddings de 20 frases con un modelo abierto"
+                    },
+                    {
+                      "id": "w4-embeddings-2",
+                      "title": "Calcular similitud coseno con NumPy"
+                    },
+                    {
+                      "id": "w4-embeddings-3",
+                      "title": "Buscar las 3 más parecidas a una consulta"
+                    }
+                  ],
+                  "doneWhen": "Un script devuelve las frases más parecidas a una pregunta."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-27",
+              "title": "Agentes y prework",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w4-agents",
+                  "title": "Qué es un agente: un LLM que usa herramientas en bucle",
+                  "type": "concept",
+                  "skills": [
+                    "agents"
+                  ],
+                  "estimateMinutes": 90,
+                  "description": "Entiende tool use, el bucle de un agente y cuándo conviene un flujo fijo en lugar de un agente.",
+                  "why": "Los agentes son hacia donde va la industria, y saber cuándo no usarlos es igual de importante.",
+                  "resources": [
+                    {
+                      "title": "Anthropic: Building effective agents",
+                      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+                      "kind": "article"
+                    },
+                    {
+                      "title": "Claude: tool use",
+                      "url": "https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Hugging Face: Agents Course",
+                      "url": "https://huggingface.co/learn/agents-course/unit0/introduction",
+                      "kind": "course"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-agents-1",
+                      "title": "Leer Building effective agents"
+                    },
+                    {
+                      "id": "w4-agents-2",
+                      "title": "Leer la guía de tool use"
+                    },
+                    {
+                      "id": "w4-agents-3",
+                      "title": "Dibujar el bucle de un agente con una herramienta"
+                    }
+                  ],
+                  "doneWhen": "Explicas la diferencia entre un workflow y un agente con un ejemplo."
+                },
+                {
+                  "id": "w4-prework",
+                  "title": "Terminar el prework oficial de Ironhack",
+                  "type": "practice",
+                  "skills": [],
+                  "estimateMinutes": 60,
+                  "description": "Completa los módulos pendientes del prework antes de que empiece el bootcamp.",
+                  "why": "Llegar con el prework hecho te deja centrarte en lo nuevo desde el primer día.",
+                  "resources": [
+                    {
+                      "title": "Ironhack (portal del bootcamp)",
+                      "url": "https://www.ironhack.com/",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-prework-1",
+                      "title": "Revisar qué módulos faltan"
+                    },
+                    {
+                      "id": "w4-prework-2",
+                      "title": "Completarlos"
+                    },
+                    {
+                      "id": "w4-prework-3",
+                      "title": "Repasar las dudas apuntadas"
+                    }
+                  ],
+                  "doneWhen": "El prework aparece como completado en la plataforma."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-28",
+              "title": "Entregable: mini app con IA",
+              "kind": "study",
+              "tasks": [
+                {
+                  "id": "w4-deliverable",
+                  "title": "Entregable: mini app en Python que use la API de un LLM",
+                  "type": "deliverable",
+                  "skills": [
+                    "llm-apis",
+                    "rag"
+                  ],
+                  "estimateMinutes": 150,
+                  "description": "Construye una app pequeña que responda preguntas sobre tus apuntes usando RAG sencillo y un LLM (de pago o local con Ollama).",
+                  "why": "Es el proyecto que demuestra que estás listo para el bootcamp.",
+                  "resources": [
+                    {
+                      "title": "Anthropic: cursos gratuitos",
+                      "url": "https://github.com/anthropics/courses",
+                      "kind": "course"
+                    },
+                    {
+                      "title": "Ollama: modelos locales gratis",
+                      "url": "https://ollama.com/",
+                      "kind": "doc"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-deliverable-1",
+                      "title": "Cargar y trocear tus apuntes"
+                    },
+                    {
+                      "id": "w4-deliverable-2",
+                      "title": "Buscar fragmentos por similitud"
+                    },
+                    {
+                      "id": "w4-deliverable-3",
+                      "title": "Responder citando los fragmentos"
+                    },
+                    {
+                      "id": "w4-deliverable-4",
+                      "title": "Añadir una interfaz de línea de comandos"
+                    },
+                    {
+                      "id": "w4-deliverable-5",
+                      "title": "Publicar con README y una demo"
+                    }
+                  ],
+                  "doneWhen": "La app responde preguntas sobre tus apuntes citando las fuentes y está en GitHub."
+                }
+              ]
+            },
+            {
+              "date": "2026-11-29",
+              "title": "Repaso",
+              "kind": "review",
+              "tasks": [
+                {
+                  "id": "w4-review",
+                  "title": "Repaso de la semana: LLMs y apps con IA",
+                  "type": "review",
+                  "skills": [
+                    "llms",
+                    "prompting",
+                    "llm-apis"
+                  ],
+                  "estimateMinutes": 60,
+                  "description": "Relee tus notas de la semana, repite los ejercicios que más te costaron y apunta dudas para el bootcamp.",
+                  "why": "Repasar a los pocos días fija lo aprendido mucho mejor que estudiar algo nuevo sin parar.",
+                  "resources": [
+                    {
+                      "title": "Anthropic: prompt engineering",
+                      "url": "https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview",
+                      "kind": "doc"
+                    },
+                    {
+                      "title": "Anthropic: Building effective agents",
+                      "url": "https://www.anthropic.com/engineering/building-effective-agents",
+                      "kind": "article"
+                    }
+                  ],
+                  "subtasks": [
+                    {
+                      "id": "w4-review-1",
+                      "title": "Relee las notas de cada tarea de la semana"
+                    },
+                    {
+                      "id": "w4-review-2",
+                      "title": "Repite el ejercicio que más te costó sin mirar la solución"
+                    },
+                    {
+                      "id": "w4-review-3",
+                      "title": "Pide al coach un examen de la habilidad más floja"
+                    },
+                    {
+                      "id": "w4-review-4",
+                      "title": "Apunta 3 dudas abiertas"
+                    }
+                  ],
+                  "doneWhen": "Has hecho el examen del coach y tienes una lista de dudas apuntada."
+                }
+              ]
+            }
           ]
         }
       ]

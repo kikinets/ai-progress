@@ -116,7 +116,6 @@ pub struct Subtask {
 }
 
 /// The embedded roadmap, parsed and validated.
-#[allow(dead_code)] // used once the app switches to v2 (Task 2+)
 pub fn load() -> Result<Roadmap, String> {
     let roadmap = parse(ROADMAP_JSON)?;
     roadmap.validate().map_err(|errors| errors.join("\n"))?;
@@ -137,7 +136,11 @@ impl Roadmap {
             .flat_map(|(w, d)| d.tasks.iter().map(move |t| (w, d, t)))
     }
 
-    #[allow(dead_code)] // used by commands from Task 2
+    pub fn task_ids(&self) -> HashSet<String> {
+        self.tasks().map(|(_, _, t)| t.id.clone()).collect()
+    }
+
+    #[allow(dead_code)] // used by commands from Task 6
     pub fn task(&self, id: &str) -> Option<&Task> {
         self.tasks().map(|(_, _, t)| t).find(|t| t.id == id)
     }
@@ -238,18 +241,6 @@ pub fn parse_value() -> serde_json::Result<Value> {
     serde_json::from_str(ROADMAP_JSON)
 }
 
-/// Collects every task id in the roadmap, so progress can only reference real tasks.
-pub fn task_ids(roadmap: &Value) -> HashSet<String> {
-    let as_array = |v: &Value, key: &str| v[key].as_array().cloned().unwrap_or_default();
-
-    as_array(roadmap, "phases")
-        .iter()
-        .flat_map(|phase| as_array(phase, "weeks"))
-        .flat_map(|week| as_array(&week, "tasks"))
-        .filter_map(|task| task["id"].as_str().map(String::from))
-        .collect()
-}
-
 #[cfg(test)]
 mod v2_tests {
     use super::*;
@@ -332,43 +323,30 @@ mod v2_tests {
         assert!(err.contains("estimate"), "{err}");
     }
 
+    const V1_IDS: [&str; 29] = [
+        "w1-setup", "w1-venv", "w1-basics", "w1-functions", "w1-oop", "w1-style", "w1-jupyter",
+        "w1-prework", "w1-deliverable", "w2-numpy", "w2-pandas", "w2-viz", "w2-sql", "w2-math",
+        "w2-deliverable", "w3-types", "w3-validation", "w3-models", "w3-metrics", "w3-sklearn",
+        "w3-nn", "w3-deliverable", "w4-llms", "w4-prompting", "w4-api", "w4-rag", "w4-agents",
+        "w4-prework", "w4-deliverable",
+    ];
+
+    #[test]
+    fn embedded_roadmap_is_valid_and_keeps_v1_ids() {
+        let roadmap = load().unwrap();
+        for id in V1_IDS {
+            assert!(roadmap.task(id).is_some(), "missing v1 task {id}");
+        }
+        for week in roadmap.prep_weeks() {
+            assert_eq!(week.days.len(), 7, "week {} must have 7 days", week.id);
+            assert_eq!(week.days.last().unwrap().kind, DayKind::Review);
+            assert!(week.days.iter().flat_map(|d| &d.tasks).any(|t| t.kind == TaskType::Deliverable));
+        }
+    }
+
     #[test]
     fn empty_done_when_rejected() {
         let err = errors_for(|v| task(v)["doneWhen"] = " ".into());
         assert!(err.contains("doneWhen"), "{err}");
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::collections::HashMap;
-
-    #[test]
-    fn embedded_roadmap_parses_and_has_tasks() {
-        let roadmap = parse_value().expect("roadmap.json must be valid JSON");
-        let ids = task_ids(&roadmap);
-        assert!(ids.contains("w1-setup"));
-        assert!(ids.contains("w4-deliverable"));
-    }
-
-    fn strings(v: &Value) -> Vec<&str> {
-        v.as_array().into_iter().flatten().filter_map(Value::as_str).collect()
-    }
-
-    #[test]
-    fn skill_references_exist_and_graph_has_no_cycles() {
-        let roadmap = parse_value().unwrap();
-        let skills = roadmap["skills"].as_array().unwrap();
-        let requires: HashMap<&str, Vec<&str>> = skills
-            .iter()
-            .map(|s| (s["id"].as_str().unwrap(), strings(&s["requires"])))
-            .collect();
-
-        for (skill, reqs) in &requires {
-            for req in reqs {
-                assert!(requires.contains_key(req), "skill {skill} requires unknown skill {req}");
-            }
-        }
     }
 }
