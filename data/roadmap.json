@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "title": "Roadmap AI Engineering",
+  "goal": "Llegar al bootcamp de AI Engineering de Ironhack con una base sólida",
+  "skills": [
+    { "id": "python", "name": "Python", "requires": [] },
+    { "id": "tooling", "name": "Entorno y Git", "requires": [] },
+    { "id": "numpy-pandas", "name": "NumPy y Pandas", "requires": ["python"] },
+    { "id": "sql", "name": "SQL", "requires": [] },
+    { "id": "math", "name": "Matemáticas para IA", "requires": [] },
+    { "id": "ml", "name": "Machine learning clásico", "requires": ["numpy-pandas", "math"] },
+    { "id": "neural-nets", "name": "Redes neuronales", "requires": ["ml"] },
+    { "id": "llms", "name": "LLMs", "requires": ["neural-nets"] },
+    { "id": "prompting", "name": "Prompt engineering", "requires": ["llms"] },
+    { "id": "llm-apis", "name": "APIs de LLMs", "requires": ["python", "prompting"] },
+    { "id": "rag", "name": "RAG", "requires": ["llm-apis"] },
+    { "id": "agents", "name": "Agentes", "requires": ["llm-apis"] }
+  ],
+  "phases": [
+    {
+      "id": "prep",
+      "name": "Preparación pre-bootcamp",
+      "start": "2026-11-02",
+      "end": "2026-11-29",
+      "weeks": [
+        {
+          "id": "w1",
+          "number": 1,
+          "title": "Python de verdad y entorno de trabajo",
+          "start": "2026-11-02",
+          "end": "2026-11-08",
+          "tasks": [
+            { "id": "w1-setup", "title": "Instalar Python 3.12+, VS Code, Git y crear cuenta de GitHub", "type": "practice", "skills": ["tooling"] },
+            { "id": "w1-venv", "title": "Entornos virtuales (venv o uv) y gestión de dependencias", "type": "practice", "skills": ["tooling"] },
+            { "id": "w1-basics", "title": "Tipos, listas, diccionarios, sets, comprehensions, f-strings", "type": "concept", "skills": ["python"] },
+            { "id": "w1-functions", "title": "Funciones, args/kwargs, excepciones, módulos e imports", "type": "concept", "skills": ["python"] },
+            { "id": "w1-oop", "title": "Clases y POO en Python (comparado con C++)", "type": "concept", "skills": ["python"] },
+            { "id": "w1-style", "title": "Type hints y estilo PEP 8", "type": "concept", "skills": ["python"] },
+            { "id": "w1-jupyter", "title": "Jupyter notebooks: cuándo usarlos y cuándo no", "type": "practice", "skills": ["tooling"] },
+            { "id": "w1-prework", "title": "Empezar el prework oficial de Ironhack", "type": "practice", "skills": [] },
+            { "id": "w1-deliverable", "title": "Entregable: herramienta CLI (gestor de gastos con CSV) en un repo con README", "type": "deliverable", "skills": ["python", "tooling"] }
+          ]
+        },
+        {
+          "id": "w2",
+          "number": 2,
+          "title": "Datos y las matemáticas justas",
+          "start": "2026-11-09",
+          "end": "2026-11-15",
+          "tasks": [
+            { "id": "w2-numpy", "title": "NumPy: arrays, vectorización, broadcasting", "type": "concept", "skills": ["numpy-pandas"] },
+            { "id": "w2-pandas", "title": "Pandas: cargar, filtrar, agrupar, unir y limpiar datos", "type": "practice", "skills": ["numpy-pandas"] },
+            { "id": "w2-viz", "title": "Visualización básica con Matplotlib o Seaborn", "type": "practice", "skills": ["numpy-pandas"] },
+            { "id": "w2-sql", "title": "SQL básico: SELECT, WHERE, GROUP BY, JOIN", "type": "practice", "skills": ["sql"] },
+            { "id": "w2-math", "title": "Vectores, matrices, producto escalar, gradiente, probabilidad", "type": "concept", "skills": ["math"] },
+            { "id": "w2-deliverable", "title": "Entregable: EDA de un dataset de Kaggle con 3-5 conclusiones", "type": "deliverable", "skills": ["numpy-pandas"] }
+          ]
+        },
+        {
+          "id": "w3",
+          "number": 3,
+          "title": "Machine learning clásico",
+          "start": "2026-11-16",
+          "end": "2026-11-22",
+          "tasks": [
+            { "id": "w3-types", "title": "Aprendizaje supervisado vs no supervisado", "type": "concept", "skills": ["ml"] },
+            { "id": "w3-validation", "title": "Train/test split, overfitting, validación cruzada", "type": "concept", "skills": ["ml"] },
+            { "id": "w3-models", "title": "Regresión lineal y logística, árboles y random forest", "type": "concept", "skills": ["ml"] },
+            { "id": "w3-metrics", "title": "Métricas: accuracy, precision, recall, F1, matriz de confusión", "type": "concept", "skills": ["ml"] },
+            { "id": "w3-sklearn", "title": "scikit-learn de principio a fin", "type": "practice", "skills": ["ml"] },
+            { "id": "w3-nn", "title": "Redes neuronales a nivel intuitivo", "type": "concept", "skills": ["neural-nets"] },
+            { "id": "w3-deliverable", "title": "Entregable: clasificador con scikit-learn explicado con SHAP", "type": "deliverable", "skills": ["ml"] }
+          ]
+        },
+        {
+          "id": "w4",
+          "number": 4,
+          "title": "LLMs y tu primera app con IA",
+          "start": "2026-11-23",
+          "end": "2026-11-29",
+          "tasks": [
+            { "id": "w4-llms", "title": "Tokens, embeddings, transformers y atención (intuición)", "type": "concept", "skills": ["llms"] },
+            { "id": "w4-prompting", "title": "Prompt engineering: instrucciones, ejemplos, roles, formato", "type": "concept", "skills": ["prompting"] },
+            { "id": "w4-api", "title": "API de un LLM desde Python: system prompt, streaming, JSON", "type": "practice", "skills": ["llm-apis"] },
+            { "id": "w4-rag", "title": "Qué es RAG y por qué existe", "type": "concept", "skills": ["rag"] },
+            { "id": "w4-agents", "title": "Qué es un agente: un LLM que usa herramientas en bucle", "type": "concept", "skills": ["agents"] },
+            { "id": "w4-prework", "title": "Terminar el prework oficial de Ironhack", "type": "practice", "skills": [] },
+            { "id": "w4-deliverable", "title": "Entregable: mini app en Python que use la API de un LLM", "type": "deliverable", "skills": ["llm-apis"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bootcamp",
+      "name": "Bootcamp Ironhack",
+      "start": null,
+      "end": null,
+      "note": "Rellenar fechas y semanas cuando Ironhack pase el temario",
+      "weeks": []
+    }
+  ]
+}

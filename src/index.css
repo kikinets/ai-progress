@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* Design tokens: one accent color for progress, light and dark themes. */
+@theme {
+  --color-surface: #fafafa;
+  --color-ink: #18181b;
+  --color-muted: #71717a;
+  --color-line: #e4e4e7;
+  --color-accent: #4f46e5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #18181b;
+    --color-ink: #f4f4f5;
+    --color-muted: #a1a1aa;
+    --color-line: #3f3f46;
+    --color-accent: #818cf8;
+  }
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: system-ui, sans-serif;
+}
