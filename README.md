@@ -6,12 +6,12 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 
 ## Status
 
-**Phase 0: bootstrap (done).** The app loads the study roadmap from the Rust core and renders its phases, weeks and tasks as a read-only list.
+**Phase 1: progress (done).** Tasks can be checked off; progress is saved to disk by the Rust core, and the app shows overall and weekly progress plus a daily study streak.
 
 | Phase | Scope |
 | --- | --- |
 | 0 | Project setup, roadmap loading from Rust ✅ |
-| 1 | Check off tasks, persist progress, study streak |
+| 1 | Check off tasks, persist progress, study streak ✅ |
 | 2 | Skill map (dependency graph) with React Flow |
 | 3 | AI coach that reviews progress and quizzes me |
 
@@ -26,7 +26,7 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 
 - The UI only renders and animates. File access and external API calls always go through the Rust core via Tauri commands.
 - `data/roadmap.json` is read-only seed data: skills with prerequisites, phases, weeks and tasks, each with a stable `id`.
-- User progress will live in a separate `progress.json` that references tasks by `id`, never by title.
+- User progress lives in a separate `progress.json` in the OS app data folder (not in the repo). It references tasks by `id`, never by title, and is written atomically.
 
 ```
 data/        roadmap.json (study plan)
@@ -50,4 +50,4 @@ Other commands:
 | --- | --- |
 | `npm run build` | Type-check and build the UI only |
 | `npm run tauri build` | Build the desktop installer |
-| `cargo check --manifest-path src-tauri/Cargo.toml` | Check the Rust core |
+| `cargo test --manifest-path src-tauri/Cargo.toml` | Run the Rust core tests |
