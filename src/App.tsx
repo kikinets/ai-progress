@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MotionConfig, motion } from "motion/react";
 import { loadProgress, loadRoadmap, setTaskDone } from "./lib/api";
+import { CoachView } from "./components/CoachView";
 import { ProgressBar } from "./components/ProgressBar";
 import { RoadmapView } from "./components/RoadmapView";
 import { SkillsView } from "./components/SkillsView";
@@ -8,11 +9,12 @@ import { StreakBadge } from "./components/StreakBadge";
 import type { Progress } from "./types/progress";
 import type { Roadmap, Task } from "./types/roadmap";
 
-type View = "roadmap" | "skills";
+type View = "roadmap" | "skills" | "coach";
 
 const TABS: { id: View; label: string }[] = [
   { id: "roadmap", label: "Roadmap" },
   { id: "skills", label: "Habilidades" },
+  { id: "coach", label: "Coach" },
 ];
 
 function App() {
@@ -127,11 +129,13 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.15 }}
         >
-          {view === "roadmap" ? (
+          {view === "roadmap" && (
             <RoadmapView roadmap={roadmap} completed={progress.completed} onToggle={toggleTask} />
-          ) : (
+          )}
+          {view === "skills" && (
             <SkillsView roadmap={roadmap} completed={progress.completed} onToggle={toggleTask} />
           )}
+          {view === "coach" && <CoachView roadmap={roadmap} completed={progress.completed} onToggle={toggleTask} />}
         </motion.div>
       </motion.main>
     </MotionConfig>
