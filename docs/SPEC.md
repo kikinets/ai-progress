@@ -1,6 +1,6 @@
 # AI Progress: especificación
 
-> Borrador mínimo creado en la Fase 0. Ampliar cuando se defina cada fase.
+> Especificación de la v1 (fases 0-3). La v2 (rediseño) está en `docs/superpowers/specs/2026-11-01-redesign-design.md` y la sustituye donde se contradigan.
 
 ## Objetivo
 App de escritorio para seguir el aprendizaje de IA: roadmap interactivo, tareas que se marcan con animaciones, racha de estudio y, más adelante, un coach con IA que lee el progreso y examina.

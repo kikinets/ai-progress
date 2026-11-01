@@ -2,19 +2,17 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { coachReview, copyReviewPrompt } from "../lib/api";
 import type { Review } from "../types/coach";
-import type { Task } from "../types/roadmap";
 import { CopyToClaude } from "./CopyToClaude";
-import { TaskItem } from "./TaskItem";
+import { TaskRow } from "./TaskRow";
+import { useStore } from "../app/store";
 import { Thinking } from "./Thinking";
 
 interface Props {
   hasApiKey: boolean;
-  tasksById: Map<string, Task>;
-  completed: Record<string, string>;
-  onToggle: (task: Task) => void;
 }
 
-export function ReviewCard({ hasApiKey, tasksById, completed, onToggle }: Props) {
+export function ReviewCard({ hasApiKey }: Props) {
+  const { taskById } = useStore();
   const [review, setReview] = useState<Review | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,11 +29,11 @@ export function ReviewCard({ hasApiKey, tasksById, completed, onToggle }: Props)
     }
   }
 
-  const nextTasks = review?.nextTaskIds.map((id) => tasksById.get(id)).filter((t) => t !== undefined) ?? [];
+  const nextTasks = review?.nextTaskIds.map((id) => taskById.get(id)).filter((t) => t !== undefined) ?? [];
 
   return (
-    <section className="rounded-lg border border-line p-4">
-      <h3 className="font-medium">Revisión de progreso</h3>
+    <section className="surface rounded-2xl p-5">
+      <h3 className="text-lg font-semibold">Revisión de progreso</h3>
       <p className="text-sm text-muted">
         El coach mira tu roadmap, tus tareas y tu racha, y te dice cómo vas y qué hacer después.
       </p>
@@ -47,7 +45,7 @@ export function ReviewCard({ hasApiKey, tasksById, completed, onToggle }: Props)
             type="button"
             onClick={runWithApi}
             disabled={loading}
-            className="rounded-md border border-line px-3 py-1.5 text-sm hover:border-accent disabled:opacity-50"
+            className="rounded-xl border border-line bg-surface-2 px-3.5 py-2 text-sm hover:border-line-strong disabled:opacity-50"
           >
             Preguntar aquí (API)
           </button>
@@ -56,7 +54,7 @@ export function ReviewCard({ hasApiKey, tasksById, completed, onToggle }: Props)
 
       {loading && <Thinking label="El coach está revisando tu progreso…" />}
       {error && (
-        <p role="alert" className="mt-3 text-sm text-red-600">
+        <p role="alert" className="mt-3 text-sm text-danger">
           {error}
         </p>
       )}
@@ -68,9 +66,9 @@ export function ReviewCard({ hasApiKey, tasksById, completed, onToggle }: Props)
           {nextTasks.length > 0 && (
             <>
               <h4 className="mt-4 text-xs font-medium uppercase tracking-wide text-muted">Siguientes tareas</h4>
-              <ul className="mt-1 space-y-0.5">
+              <ul className="-mx-2 mt-1 space-y-0.5">
                 {nextTasks.map((task) => (
-                  <TaskItem key={task.id} task={task} done={Boolean(completed[task.id])} onToggle={onToggle} />
+                  <TaskRow key={task.id} task={task} />
                 ))}
               </ul>
             </>

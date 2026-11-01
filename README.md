@@ -1,19 +1,20 @@
 # AI Progress
 
-A desktop app to track my AI engineering learning path: an interactive study roadmap, tasks I check off, a study streak and, later on, an AI coach that reads my progress and quizzes me.
+A polished dark desktop app to track my AI engineering learning path: a day-by-day study plan, a study timer, XP, levels and badges, a skill map and an AI coach that reviews my progress and quizzes me.
 
-It is also my first serious project built with an AI coding agent (Claude Code), so part of the goal is learning how to work well with one.
+It is also my first serious project built with an AI coding agent (Claude Code), so part of the goal is learning how to work ## Features (v2)
 
-## Status
+- **Today**: what to study today (plus overdue tasks), a Pomodoro / free study timer, streak, weekly minutes vs target, level, a 12-week activity heatmap and the next milestone.
+- **Plan**: a 4-week, day-by-day plan (50 tasks, 173 subtasks, ~150 min/day). Each task opens a side panel with what to do, why it matters, real free resources, subtasks, a "done when" criterion, time studied vs estimated and Markdown notes that save themselves.
+- **Study timer**: Pomodoro (25/5, long break every 4) or free mode, always tied to a task. The session lives in the Rust core, so it survives closing the app; forgotten sessions are capped at 4 h. System notification when a block ends.
+- **Achievements**: XP for subtasks, tasks, reviews, deliverables and study minutes; levels; 15 badges with progress and confetti when they unlock.
+- **Skills**: dependency graph of skills (React Flow), each locked, available, in progress or done.
+- **Coach**: free by default (copies a prompt with your progress and opens claude.ai); optional in-app answers through the Anthropic API.
+- Command palette (`Ctrl+K`), shortcuts (`1`-`5` sections, `Space` pause/resume), light and dark themes, reduced-motion support.
 
-**Phase 3: AI coach (done).** Tasks can be checked off; progress is saved to disk by the Rust core, and the app shows overall and weekly progress plus a daily study streak. A second tab shows the skill dependency graph, with each skill locked, available, in progress or done. A third tab is an AI coach powered by Claude: it reviews progress against the calendar and suggests the next tasks, and it quizzes you on any skill with multiple-choice questions. By default it is free: the app builds the prompt from your progress, copies it and opens claude.ai, where your Claude subscription answers. Optionally, with an Anthropic API key, answers appear inside the app.
+Design and plan: [`docs/superpowers/specs/2026-11-01-redesign-design.md`](docs/superpowers/specs/2026-11-01-redesign-design.md).
 
-| Phase | Scope |
-| --- | --- |
-| 0 | Project setup, roadmap loading from Rust ✅ |
-| 1 | Check off tasks, persist progress, study streak ✅ |
-| 2 | Skill map (dependency graph) with React Flow ✅ |
-| 3 | AI coach that reviews progress and quizzes me ✅ |
+quizzes me ✅ |
 
 ## Stack
 
@@ -23,12 +24,14 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 - [Motion](https://motion.dev/) for animations, respecting `prefers-reduced-motion`
 - [React Flow](https://reactflow.dev/) for the skill map
 - [Claude API](https://docs.claude.com/) (`claude-opus-5-5`, structured JSON output) for the coach, called from Rust with `reqwest`
+- Radix (dialogs, tooltips), cmdk (command palette), lucide icons, canvas-confetti, Geist font
 - Vitest (UI logic) and `cargo test` (Rust core)
 
 ## Architecture
 
 - The UI only renders and animates. File access and external API calls always go through the Rust core via Tauri commands.
-- `data/roadmap.json` is read-only seed data: skills with prerequisites, phases, weeks and tasks, each with a stable `id`.
+- `data/roadmap.json` (v2) is read-only seed data: skills with prerequisites, phases, weeks, days and tasks with resources and subtasks, each with a stable `id`. Rust validates it in tests.
+- All domain logic (streak, stats, timer sessions, XP, levels, badges) lives in Rust and is unit tested; v1 progress files are migrated automatically with a backup.
 - The Anthropic API key is stored in the OS credential store (or read from `ANTHROPIC_API_KEY`), never in files or in git. The UI never sees it.
 - User progress lives in a separate `progress.json` in the OS app data folder (not in the repo). It references tasks by `id`, never by title, and is written atomically.
 
@@ -52,6 +55,7 @@ Other commands:
 
 | Command | What it does |
 | --- | --- |
+| `npm run dev` | UI only in a browser, with a mock backend (no Rust needed) |
 | `npm run build` | Type-check and build the UI only |
 | `npm run tauri build` | Build the desktop installer |
 | `npm test` | Run the UI logic tests |

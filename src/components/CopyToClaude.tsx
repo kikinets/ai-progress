@@ -31,7 +31,7 @@ export function CopyToClaude({ copyPrompt }: Props) {
       <button
         type="button"
         onClick={copy}
-        className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-surface"
+        className="bg-accent-gradient rounded-xl px-3.5 py-2 text-sm font-medium text-white shadow-[0_4px_20px_-6px_var(--color-accent-from)] hover:brightness-110"
       >
         Copiar para Claude.ai
       </button>
@@ -51,7 +51,7 @@ export function CopyToClaude({ copyPrompt }: Props) {
         )}
       </AnimatePresence>
       {state === "error" && (
-        <p role="alert" className="mt-2 text-sm text-red-600">
+        <p role="alert" className="mt-2 text-sm text-danger">
           {error}
         </p>
       )}

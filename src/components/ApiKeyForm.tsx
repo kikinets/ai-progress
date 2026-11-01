@@ -24,8 +24,8 @@ export function ApiKeyForm({ onSaved }: { onSaved: () => void }) {
   }
 
   return (
-    <form onSubmit={save} className="rounded-lg border border-line p-4">
-      <h3 className="font-medium">Respuestas dentro de la app</h3>
+    <form onSubmit={save} className="surface rounded-2xl p-5">
+      <h3 className="text-lg font-semibold">Respuestas dentro de la app</h3>
       <p className="mt-1 text-sm text-muted">
         Con una clave de la API de Claude, el coach responde aquí mismo y puedes marcar sus tareas y hacer el examen en la
         app. La API se paga aparte de tu suscripción: unos céntimos por consulta. Crea una clave en la{" "}
@@ -43,18 +43,18 @@ export function ApiKeyForm({ onSaved }: { onSaved: () => void }) {
           onChange={(e) => setKey(e.currentTarget.value)}
           placeholder="sk-ant-…"
           aria-label="Clave de API de Anthropic"
-          className="flex-1 rounded-md border border-line bg-surface px-3 py-1.5 text-sm focus-visible:outline-2 focus-visible:outline-accent"
+          className="flex-1 rounded-xl border border-line bg-surface-2 px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-accent"
         />
         <button
           type="submit"
           disabled={saving || key.trim() === ""}
-          className="rounded-md bg-accent px-3 py-1.5 text-sm font-medium text-surface disabled:opacity-50"
+          className="bg-accent-gradient rounded-xl px-3.5 py-2 text-sm font-medium text-white shadow-[0_4px_20px_-6px_var(--color-accent-from)] hover:brightness-110 disabled:opacity-50"
         >
           {saving ? "Guardando…" : "Guardar"}
         </button>
       </div>
       {error && (
-        <p role="alert" className="mt-2 text-sm text-red-600">
+        <p role="alert" className="mt-2 text-sm text-danger">
           {error}
         </p>
       )}

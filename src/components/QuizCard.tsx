@@ -38,8 +38,8 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
   const finished = quiz !== null && answered === quiz.questions.length;
 
   return (
-    <section className="mt-4 rounded-lg border border-line p-4">
-      <h3 className="font-medium">Examen</h3>
+    <section className="surface rounded-2xl p-5">
+      <h3 className="text-lg font-semibold">Examen</h3>
       <p className="text-sm text-muted">
         5 preguntas tipo test sobre una habilidad, a tu nivel. En Claude.ai te las hace de una en una y te corrige.
       </p>
@@ -49,7 +49,7 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
           value={skillId}
           onChange={(e) => setSkillId(e.currentTarget.value)}
           aria-label="Habilidad del examen"
-          className="rounded-md border border-line bg-surface px-2 py-1.5 text-sm"
+          className="rounded-xl border border-line bg-surface-2 px-2.5 py-2 text-sm"
         >
           {skills.map((s) => (
             <option key={s.id} value={s.id}>
@@ -63,7 +63,7 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
             type="button"
             onClick={start}
             disabled={loading || !skillId}
-            className="rounded-md border border-line px-3 py-1.5 text-sm hover:border-accent disabled:opacity-50"
+            className="rounded-xl border border-line bg-surface-2 px-3.5 py-2 text-sm hover:border-line-strong disabled:opacity-50"
           >
             {quiz ? "Otro examen (API)" : "Examinarme aquí (API)"}
           </button>
@@ -72,7 +72,7 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
 
       {loading && <Thinking label="El coach está preparando las preguntas…" />}
       {error && (
-        <p role="alert" className="mt-3 text-sm text-red-600">
+        <p role="alert" className="mt-3 text-sm text-danger">
           {error}
         </p>
       )}
@@ -95,7 +95,7 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
                         : isAnswer
                           ? "border-accent bg-accent/15"
                           : oi === chosen
-                            ? "border-red-600 bg-red-600/10"
+                            ? "border-danger bg-danger/10"
                             : "border-line opacity-60";
                     return (
                       <button
@@ -103,7 +103,7 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
                         type="button"
                         disabled={chosen !== undefined}
                         onClick={() => answer(qi, oi)}
-                        className={`rounded-md border px-3 py-1.5 text-left text-sm transition-colors duration-200 ${state}`}
+                        className={`rounded-xl border px-3.5 py-2.5 text-left text-sm transition-colors duration-200 ${state}`}
                       >
                         {option}
                       </button>
@@ -118,7 +118,7 @@ export function QuizCard({ skills, hasApiKey }: { skills: Skill[]; hasApiKey: bo
                       transition={{ duration: 0.2 }}
                       className="mt-2 text-sm text-muted"
                     >
-                      <span className={chosen === q.answerIndex ? "font-medium text-accent" : "font-medium text-red-600"}>
+                      <span className={chosen === q.answerIndex ? "font-medium text-accent" : "font-medium text-danger"}>
                         {chosen === q.answerIndex ? "Correcto. " : "No. "}
                       </span>
                       {q.explanation}

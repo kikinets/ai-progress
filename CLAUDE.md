@@ -33,7 +33,7 @@ Es también mi primer proyecto serio con Claude Code. Además de construir la ap
 - Tema claro y oscuro; un único color de acento para el progreso.
 
 ## Cómo trabajamos
-- Fase actual: **Fase 3 (coach con IA)**. No adelantes funcionalidades de fases futuras.
+- Fase actual: **v2 (rediseño)**, spec en `docs/superpowers/specs/2026-11-01-redesign-design.md`. No adelantes funcionalidades de fases futuras.
 - Avanza lo máximo sin pararte a pedir OK en cada paso; haz commits locales por bloque. Pregunta solo antes de acciones externas (push) o irreversibles.
 - Explica brevemente cada cambio importante: qué has hecho y por qué. Estoy aprendiendo.
 - Cambios pequeños y verificables. Al terminar algo, dime cómo probarlo.
@@ -43,6 +43,7 @@ Es también mi primer proyecto serio con Claude Code. Además de construir la ap
 ## Comandos
 - Instalar dependencias: `npm install`
 - Arrancar en desarrollo (ventana de la app con recarga en caliente): `npm run tauri dev`
+- Solo la interfaz en el navegador, con datos simulados (`src/dev/mockBackend.ts`): `npm run dev`
 - Comprobar tipos y compilar solo la interfaz: `npm run build`
 - Compilar el instalador: `npm run tauri build`
 - Comprobar el núcleo en Rust: `cargo check --manifest-path src-tauri/Cargo.toml`

@@ -13,7 +13,7 @@ export interface SkillInfo {
 }
 
 function allTasks(roadmap: Roadmap): Task[] {
-  return roadmap.phases.flatMap((p) => p.weeks.flatMap((w) => w.tasks));
+  return roadmap.phases.flatMap((p) => p.weeks.flatMap((w) => w.days.flatMap((d) => d.tasks)));
 }
 
 /** Depth of each skill = 1 + deepest requirement. The roadmap is validated acyclic in Rust tests. */
@@ -34,14 +34,14 @@ export function skillLevels(skills: Skill[]): Map<string, number> {
   return levels;
 }
 
-export function skillInfos(roadmap: Roadmap, completed: Record<string, string>): Map<string, SkillInfo> {
+export function skillInfos(roadmap: Roadmap, isDone: (taskId: string) => boolean): Map<string, SkillInfo> {
   const tasks = allTasks(roadmap);
   const levels = skillLevels(roadmap.skills);
   const infos = new Map<string, SkillInfo>();
 
   for (const skill of roadmap.skills) {
     const skillTasks = tasks.filter((t) => t.skills.includes(skill.id));
-    const done = skillTasks.filter((t) => completed[t.id]).length;
+    const done = skillTasks.filter((t) => isDone(t.id)).length;
     infos.set(skill.id, {
       skill,
       tasks: skillTasks,
