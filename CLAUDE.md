@@ -33,7 +33,7 @@ Es también mi primer proyecto serio con Claude Code. Además de construir la ap
 - Tema claro y oscuro; un único color de acento para el progreso.
 
 ## Cómo trabajamos
-- Fase actual: **Fase 1 (progreso)**. No adelantes funcionalidades de fases futuras.
+- Fase actual: **Fase 2 (mapa de habilidades)**. No adelantes funcionalidades de fases futuras.
 - Avanza lo máximo sin pararte a pedir OK en cada paso; haz commits locales por bloque. Pregunta solo antes de acciones externas (push) o irreversibles.
 - Explica brevemente cada cambio importante: qué has hecho y por qué. Estoy aprendiendo.
 - Cambios pequeños y verificables. Al terminar algo, dime cómo probarlo.
