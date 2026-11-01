@@ -1,7 +1,9 @@
+pub mod badges;
 pub mod session;
 pub mod stats;
 pub mod store;
 pub mod streak;
+pub mod xp;
 
 use std::collections::BTreeMap;
 
@@ -12,7 +14,9 @@ use crate::roadmap::{Roadmap, Task};
 
 pub use stats::Stats;
 pub use store::{ActiveSession, Progress, ProgressStore, TaskProgress, TimerMode};
+pub use badges::BadgeView;
 pub use streak::Streak;
+pub use xp::XpView;
 
 /// What the UI receives: raw progress plus everything derived from it.
 #[derive(Debug, Serialize)]
@@ -26,6 +30,8 @@ pub struct ProgressView {
     pub notice: Option<String>,
     pub streak: Streak,
     pub stats: Stats,
+    pub xp: XpView,
+    pub badges: Vec<BadgeView>,
 }
 
 /// Returned by every command that changes progress, so the UI can celebrate what just happened.
@@ -39,6 +45,7 @@ pub struct ProgressUpdate {
 
 pub fn build_view<Tz: TimeZone>(r: &Roadmap, p: &Progress, now: DateTime<Tz>) -> ProgressView {
     let tz = now.timezone();
+    let streak = streak::compute_streak(streak::study_days(p, &tz), now.date_naive());
     ProgressView {
         tasks: p.tasks.clone(),
         active_session: p.active_session.clone(),
@@ -47,8 +54,10 @@ pub fn build_view<Tz: TimeZone>(r: &Roadmap, p: &Progress, now: DateTime<Tz>) ->
             .as_ref()
             .map_or(0, |a| session::elapsed_seconds(a, now.with_timezone(&Utc))),
         notice: None,
-        streak: streak::compute_streak(streak::study_days(p, &tz), now.date_naive()),
-        stats: stats::stats(r, p, now),
+        streak: streak.clone(),
+        stats: stats::stats(r, p, now.clone()),
+        xp: xp::level_for(xp::total_xp(r, p)),
+        badges: badges::evaluate(r, p, &streak, &tz),
     }
 }
 
@@ -58,6 +67,15 @@ pub fn completed_map(p: &Progress) -> BTreeMap<String, DateTime<Utc>> {
         .iter()
         .filter_map(|(id, t)| t.completed_at.map(|at| (id.clone(), at)))
         .collect()
+}
+
+/// After a change: stores newly reached badges and reports them, plus the new level if it went up.
+pub fn rewards<Tz: TimeZone>(r: &Roadmap, before: &Progress, after: &mut Progress, now: DateTime<Tz>) -> (Vec<String>, Option<u32>) {
+    let tz = now.timezone();
+    let streak = streak::compute_streak(streak::study_days(after, &tz), now.date_naive());
+    let new_badges = badges::unlock(after, &badges::evaluate(r, after, &streak, &tz), now.with_timezone(&Utc));
+    let (old, new) = (xp::level_for(xp::total_xp(r, before)).level, xp::level_for(xp::total_xp(r, after)).level);
+    (new_badges, (new > old).then_some(new))
 }
 
 pub const MAX_NOTES_CHARS: usize = 50_000;
@@ -129,6 +147,45 @@ mod tests {
         assert_eq!(p.tasks["w1-setup"].subtasks.get("w1-setup-1"), Some(&now()));
         set_subtask(&mut p, task, "w1-setup-1", false, now()).unwrap();
         assert!(!p.tasks.contains_key("w1-setup"), "empty entries are pruned");
+    }
+
+    fn tz_now() -> DateTime<chrono::FixedOffset> {
+        now().with_timezone(&chrono::FixedOffset::east_opt(3600).unwrap())
+    }
+
+    #[test]
+    fn update_reports_new_badges_and_level_up() {
+        let r = roadmap();
+        let mut p = Progress::default();
+        // 4 regular tasks (80 XP) keep level 1; the deliverable (+80) crosses 100.
+        for id in ["w1-setup", "w1-venv", "w1-git", "w1-basics"] {
+            set_task(&mut p, id, true, now());
+        }
+        let before = p.clone();
+        let (badges, level_up) = rewards(&r, &Progress::default(), &mut p, tz_now());
+        assert_eq!(badges, ["first-step"]);
+        assert_eq!(level_up, None);
+
+        set_task(&mut p, "w1-deliverable", true, now());
+        let (badges, level_up) = rewards(&r, &before, &mut p, tz_now());
+        assert_eq!(badges, ["first-deliverable"]);
+        assert_eq!(level_up, Some(2));
+    }
+
+    #[test]
+    fn badge_survives_unchecking_but_xp_drops() {
+        let r = roadmap();
+        let mut p = Progress::default();
+        set_task(&mut p, "w1-setup", true, now());
+        rewards(&r, &Progress::default(), &mut p, tz_now());
+        let before = p.clone();
+        set_task(&mut p, "w1-setup", false, now());
+        let (badges, _) = rewards(&r, &before, &mut p, tz_now());
+        assert!(badges.is_empty());
+        assert!(p.badges.contains_key("first-step"));
+        let view = build_view(&r, &p, tz_now());
+        assert_eq!(view.xp.total, 0);
+        assert!(view.badges[0].unlocked_at.is_some());
     }
 
     #[test]

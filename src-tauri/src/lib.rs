@@ -34,12 +34,12 @@ impl AppState {
     fn mutate(&self, f: impl FnOnce(&mut Progress, DateTime<Utc>) -> Result<(), String>) -> Result<ProgressUpdate, String> {
         let mut store = self.progress.lock().map_err(|_| "progress is locked")?;
         let now = Local::now();
-        store.update(|p| f(p, now.with_timezone(&Utc)))?;
-        Ok(ProgressUpdate {
-            view: progress::build_view(&self.roadmap, store.data(), now),
-            new_badges: Vec::new(),
-            level_up: None,
-        })
+        let before = store.data().clone();
+        let (new_badges, level_up) = store.update(|p| {
+            f(p, now.with_timezone(&Utc))?;
+            Ok(progress::rewards(&self.roadmap, &before, p, now))
+        })?;
+        Ok(ProgressUpdate { view: progress::build_view(&self.roadmap, store.data(), now), new_badges, level_up })
     }
 
     fn require_task(&self, task_id: &str) -> Result<&roadmap::Task, String> {
