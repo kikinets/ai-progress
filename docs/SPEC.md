@@ -30,4 +30,9 @@ App de escritorio para seguir el aprendizaje de IA: roadmap interactivo, tareas 
   - El progreso de una habilidad son las tareas que la incluyen en `skills`. Estados: bloqueada (algún requisito sin completar), disponible, en curso, completada.
   - Al pulsar un nodo se ven sus requisitos y sus tareas, que se pueden marcar desde ahí.
   - Un test de Rust garantiza que el roadmap solo referencia habilidades que existen y que el grafo no tiene ciclos.
-- **Fase 3:** coach con IA.
+- **Fase 3, coach con IA (Claude):**
+  - Pestaña "Coach". Todas las llamadas a la API de Claude se hacen desde Rust (HTTP a `POST /v1/messages`, modelo `claude-opus-5-5`, salida estructurada con JSON Schema).
+  - Clave de API: se guarda en el Administrador de credenciales de Windows (crate `keyring`), nunca en archivos ni en git. Si existe la variable de entorno `ANTHROPIC_API_KEY`, tiene prioridad.
+  - **Revisión:** el coach recibe el roadmap, las tareas hechas y pendientes, la racha y la fecha de hoy, y devuelve un resumen, un consejo y hasta 3 tareas siguientes (ids validados contra el roadmap).
+  - **Examen:** para una habilidad elegida, genera 5 preguntas tipo test (4 opciones, una correcta, con explicación) adaptadas a las tareas de esa habilidad. Se corrigen en la interfaz; de momento no se guardan los resultados.
+  - Errores claros en español: falta la clave, clave no válida, límite de uso, sin conexión, respuesta rechazada.
