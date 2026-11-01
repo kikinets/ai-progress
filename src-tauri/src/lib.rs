@@ -23,7 +23,7 @@ struct AppState {
 impl AppState {
     fn progress_view(&self) -> Result<ProgressView, String> {
         let store = self.progress.lock().map_err(|_| "progress is locked")?;
-        Ok(store.view())
+        Ok(progress::build_view(store.data()))
     }
 }
 
@@ -56,10 +56,12 @@ fn set_task_done(task_id: String, done: bool, state: State<AppState>) -> Result<
         return Err(format!("unknown task id: {task_id}"));
     }
     let mut store = state.progress.lock().map_err(|_| "progress is locked")?;
-    store
-        .set_done(&task_id, done)
-        .map_err(|e| format!("could not save progress: {e}"))?;
-    Ok(store.view())
+    store.update(|p| {
+        let task = p.tasks.entry(task_id.clone()).or_default();
+        task.completed_at = if done { task.completed_at.or(Some(chrono::Utc::now())) } else { None };
+        Ok(())
+    })?;
+    Ok(progress::build_view(store.data()))
 }
 
 /// Says whether a key is configured and where it comes from; never returns the key itself.
