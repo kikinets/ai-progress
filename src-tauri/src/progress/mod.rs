@@ -1,3 +1,4 @@
+pub mod session;
 pub mod stats;
 pub mod store;
 pub mod streak;
@@ -10,7 +11,7 @@ use serde::Serialize;
 use crate::roadmap::Roadmap;
 
 pub use stats::Stats;
-pub use store::{Progress, ProgressStore, TaskProgress};
+pub use store::{ActiveSession, Progress, ProgressStore, TaskProgress, TimerMode};
 pub use streak::Streak;
 
 /// What the UI receives: raw progress plus everything derived from it.
@@ -18,6 +19,11 @@ pub use streak::Streak;
 #[serde(rename_all = "camelCase")]
 pub struct ProgressView {
     pub tasks: BTreeMap<String, TaskProgress>,
+    pub active_session: Option<ActiveSession>,
+    /// Seconds studied in the active session as of when the view was built.
+    pub active_elapsed_seconds: u64,
+    /// One-off message for the user (e.g. a forgotten session was closed).
+    pub notice: Option<String>,
     pub streak: Streak,
     pub stats: Stats,
 }
@@ -35,6 +41,12 @@ pub fn build_view<Tz: TimeZone>(r: &Roadmap, p: &Progress, now: DateTime<Tz>) ->
     let tz = now.timezone();
     ProgressView {
         tasks: p.tasks.clone(),
+        active_session: p.active_session.clone(),
+        active_elapsed_seconds: p
+            .active_session
+            .as_ref()
+            .map_or(0, |a| session::elapsed_seconds(a, now.with_timezone(&Utc))),
+        notice: None,
         streak: streak::compute_streak(streak::study_days(p, &tz), now.date_naive()),
         stats: stats::stats(r, p, now),
     }

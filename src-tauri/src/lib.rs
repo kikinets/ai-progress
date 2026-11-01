@@ -7,7 +7,7 @@ use std::sync::Mutex;
 
 use chrono::{DateTime, Local, Utc};
 use coach::{Quiz, Review};
-use progress::{Progress, ProgressStore, ProgressUpdate, ProgressView};
+use progress::{Progress, ProgressStore, ProgressUpdate, ProgressView, TimerMode, session};
 use roadmap::Roadmap;
 use secrets::KeySource;
 use serde::Serialize;
@@ -20,6 +20,8 @@ struct AppState {
     /// Untyped copy for the coach prompts until they move to the typed roadmap.
     roadmap_json: serde_json::Value,
     progress: Mutex<ProgressStore>,
+    /// Shown once, on the first load after startup.
+    notice: Mutex<Option<String>>,
 }
 
 impl AppState {
@@ -64,7 +66,30 @@ fn load_roadmap(state: State<AppState>) -> Roadmap {
 
 #[tauri::command]
 fn load_progress(state: State<AppState>) -> Result<ProgressView, String> {
-    state.progress_view()
+    let mut view = state.progress_view()?;
+    view.notice = state.notice.lock().map_err(|_| "notice is locked")?.take();
+    Ok(view)
+}
+
+#[tauri::command]
+fn start_session(task_id: String, mode: TimerMode, state: State<AppState>) -> Result<ProgressUpdate, String> {
+    state.require_task(&task_id)?;
+    state.mutate(|p, now| session::start(p, &task_id, mode, now))
+}
+
+#[tauri::command]
+fn pause_session(state: State<AppState>) -> Result<ProgressUpdate, String> {
+    state.mutate(session::pause)
+}
+
+#[tauri::command]
+fn resume_session(state: State<AppState>) -> Result<ProgressUpdate, String> {
+    state.mutate(session::resume)
+}
+
+#[tauri::command]
+fn stop_session(state: State<AppState>) -> Result<ProgressUpdate, String> {
+    state.mutate(|p, now| session::stop(p, now).map(|_| ()))
 }
 
 /// Marks a task as done or not done and returns the updated progress.
@@ -153,12 +178,17 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
             let path = app.path().app_data_dir()?.join("progress.json");
+            let mut store = ProgressStore::open(path);
+            let closed = store.update(|p| Ok(session::close_stale(p, Utc::now()))).unwrap_or(None);
+            let notice = closed.map(|_| "Se cerró una sesión que llevaba abierta más de 4 horas.".to_string());
             app.manage(AppState {
                 roadmap: roadmap::load()?,
                 roadmap_json: roadmap::parse_value()?,
-                progress: Mutex::new(ProgressStore::open(path)),
+                progress: Mutex::new(store),
+                notice: Mutex::new(notice),
             });
             Ok(())
         })
@@ -166,6 +196,10 @@ pub fn run() {
             load_roadmap,
             load_progress,
             set_task_done,
+            start_session,
+            pause_session,
+            resume_session,
+            stop_session,
             api_key_status,
             set_api_key,
             delete_api_key,
