@@ -136,11 +136,6 @@ impl Roadmap {
             .flat_map(|(w, d)| d.tasks.iter().map(move |t| (w, d, t)))
     }
 
-    pub fn task_ids(&self) -> HashSet<String> {
-        self.tasks().map(|(_, _, t)| t.id.clone()).collect()
-    }
-
-    #[allow(dead_code)] // used by commands from Task 6
     pub fn task(&self, id: &str) -> Option<&Task> {
         self.tasks().map(|(_, _, t)| t).find(|t| t.id == id)
     }

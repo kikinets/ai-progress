@@ -1,7 +1,12 @@
 use std::collections::BTreeSet;
 
-use chrono::NaiveDate;
+use chrono::{NaiveDate, TimeZone};
 use serde::Serialize;
+
+use super::store::Progress;
+
+/// Studying fewer minutes than this without completing anything does not count as a study day.
+pub const MIN_STUDY_MINUTES: u32 = 10;
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -40,12 +45,54 @@ pub fn compute_streak(days: impl IntoIterator<Item = NaiveDate>, today: NaiveDat
     }
 }
 
+/// Local dates that count for the streak: a task or subtask was completed, or at least
+/// MIN_STUDY_MINUTES were studied that day.
+pub fn study_days<Tz: TimeZone>(p: &Progress, tz: &Tz) -> BTreeSet<NaiveDate> {
+    let local = |at: &chrono::DateTime<chrono::Utc>| at.with_timezone(tz).date_naive();
+    let completions = p.tasks.values().flat_map(|t| t.completed_at.iter().chain(t.subtasks.values()));
+    let studied = super::stats::minutes_per_day(p, tz)
+        .into_iter()
+        .filter(|(_, minutes)| *minutes >= MIN_STUDY_MINUTES)
+        .map(|(day, _)| day);
+    completions.map(local).chain(studied).collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::progress::stats::tests::{session, tz, utc};
+    use crate::progress::store::TaskProgress;
 
     fn d(s: &str) -> NaiveDate {
         NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap()
+    }
+
+    #[test]
+    fn nine_minutes_does_not_count_ten_does() {
+        let p = Progress {
+            sessions: vec![session("2026-11-02T09:00:00Z", 9), session("2026-11-03T09:00:00Z", 10)],
+            ..Default::default()
+        };
+        assert_eq!(study_days(&p, &tz()).into_iter().collect::<Vec<_>>(), [d("2026-11-03")]);
+    }
+
+    #[test]
+    fn subtask_completion_counts_as_study_day() {
+        let mut p = Progress::default();
+        let mut task = TaskProgress::default();
+        task.subtasks.insert("w1-setup-1".into(), utc("2026-11-05T09:00:00Z"));
+        p.tasks.insert("w1-setup".into(), task);
+        assert!(study_days(&p, &tz()).contains(&d("2026-11-05")));
+    }
+
+    #[test]
+    fn completion_counts_on_local_date() {
+        let mut p = Progress::default();
+        p.tasks.insert(
+            "w1-setup".into(),
+            TaskProgress { completed_at: Some(utc("2026-11-02T23:30:00Z")), ..Default::default() },
+        );
+        assert_eq!(study_days(&p, &tz()).into_iter().collect::<Vec<_>>(), [d("2026-11-03")]);
     }
 
     #[test]
