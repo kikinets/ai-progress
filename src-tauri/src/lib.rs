@@ -134,7 +134,7 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .setup(|app| {
             let path = app.path().app_data_dir()?.join("progress.json");
-            let roadmap = roadmap::parse()?;
+            let roadmap = roadmap::parse_value()?;
             app.manage(AppState {
                 task_ids: roadmap::task_ids(&roadmap),
                 roadmap,
