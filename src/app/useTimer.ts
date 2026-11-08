@@ -2,6 +2,7 @@
 // Rust only counts study time (pauses excluded); pomodoro breaks are a pause the UI manages.
 import { createContext, createElement, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { isPermissionGranted, requestPermission, sendNotification } from "@tauri-apps/plugin-notification";
+import { blockTransition, liveBreak, type BlockGuard } from "./pomodoro";
 import { useStore } from "./store";
 
 export const FOCUS_SECONDS = 25 * 60;
@@ -82,9 +83,10 @@ type Timer = TimerState & { skipBreak: () => void };
 function useTimerEngine(): Timer {
   const { view, viewAt, actions } = useStore();
   const [now, setNow] = useState(Date.now());
-  const [breakEndsAt, setBreakEndsAt] = useState(readBreak);
   const session = view.activeSession;
-  const notifiedBlock = useRef(-1);
+  // A break that ended while the app was closed is dropped silently.
+  const [breakEndsAt, setBreakEndsAt] = useState(() => liveBreak(readBreak(), session, Date.now()));
+  const guard = useRef<BlockGuard | null>(null);
 
   useEffect(() => {
     if (!session && !breakEndsAt) return;
@@ -95,20 +97,21 @@ function useTimerEngine(): Timer {
   const running = Boolean(session && !session.paused);
   // `now` can lag behind `viewAt` until the next tick; never count negative time.
   const elapsed = view.activeElapsedSeconds + (running ? Math.max(0, Math.floor((now - viewAt) / 1000)) : 0);
-  const pomodoro = session?.mode === "pomodoro";
   const blocks = Math.floor(elapsed / FOCUS_SECONDS);
 
-  // End of a focus block: pause the session and start a break.
+  // End of a focus block: pause the session and start a break. The guard is per session,
+  // so restarting the app mid-block or starting a new session never fires by surprise.
   useEffect(() => {
-    if (!pomodoro || !running || blocks === 0 || notifiedBlock.current === blocks) return;
-    notifiedBlock.current = blocks;
+    const next = blockTransition(guard.current, session, blocks);
+    guard.current = next.guard;
+    if (!next.fire) return;
     const breakSeconds = blocks % 4 === 0 ? LONG_BREAK_SECONDS : SHORT_BREAK_SECONDS;
     const endsAt = Date.now() + breakSeconds * 1000;
     writeBreak(endsAt);
     setBreakEndsAt(endsAt);
     actions.pauseSession();
     notify("Pomodoro terminado", `Tómate ${breakSeconds / 60} minutos.`);
-  }, [pomodoro, running, blocks, actions]);
+  }, [session, blocks, actions]);
 
   // End of a break.
   useEffect(() => {
@@ -119,9 +122,9 @@ function useTimerEngine(): Timer {
     }
   }, [now, breakEndsAt]);
 
-  // Drop a stale break when the session ends.
+  // Resuming (by any means) or ending the session cancels the break without a notification.
   useEffect(() => {
-    if (!session && breakEndsAt) {
+    if (breakEndsAt && !session?.paused) {
       writeBreak(0);
       setBreakEndsAt(0);
     }
@@ -139,7 +142,7 @@ function useTimerEngine(): Timer {
   return {
     phase: session.paused ? "paused" : "focus",
     elapsed,
-    remaining: pomodoro ? FOCUS_SECONDS - (elapsed % FOCUS_SECONDS) : null,
+    remaining: session.mode === "pomodoro" ? FOCUS_SECONDS - (elapsed % FOCUS_SECONDS) : null,
     blocks,
     skipBreak,
   };
