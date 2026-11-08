@@ -2,7 +2,15 @@
 
 A polished dark desktop app to track my AI engineering learning path: a day-by-day study plan, a study timer, XP, levels and badges, a skill map and an AI coach that reviews my progress and quizzes me.
 
-It is also my first serious project built with an AI coding agent (Claude Code), so part of the goal is learning how to work ## Features (v2)
+It is also my first serious project built with an AI coding agent (Claude Code), so part of the goal is learning how to work well with one.
+
+## Download
+
+**[Download AI Progress for Windows](https://github.com/kikinets/ai-progress/releases/latest/download/AI-Progress-setup.exe)** (installer, about 4 MB). Run it and open AI Progress from the Start menu or the desktop. Windows SmartScreen may warn because the installer is not code-signed: choose *More info* > *Run anyway*.
+
+All versions: [Releases](https://github.com/kikinets/ai-progress/releases).
+
+## Features (v2)
 
 - **Today**: what to study today (plus overdue tasks), a Pomodoro / free study timer, streak, weekly minutes vs target, level, a 12-week activity heatmap and the next milestone.
 - **Plan**: a 4-week, day-by-day plan (50 tasks, 173 subtasks, ~150 min/day). Each task opens a side panel with what to do, why it matters, real free resources, subtasks, a "done when" criterion, time studied vs estimated and Markdown notes that save themselves.
@@ -14,7 +22,6 @@ It is also my first serious project built with an AI coding agent (Claude Code),
 
 Design and plan: [`docs/superpowers/specs/2026-11-01-redesign-design.md`](docs/superpowers/specs/2026-11-01-redesign-design.md).
 
-quizzes me ✅ |
 
 ## Stack
 
